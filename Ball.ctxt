@@ -1,0 +1,27 @@
+#BlueJ class context
+comment0.target=Ball
+comment1.params=parent
+comment1.target=Ball(World)
+comment10.params=
+comment10.target=void\ run()
+comment11.params=target
+comment11.target=boolean\ IsAt(java.awt.Point)
+comment2.params=
+comment2.target=void\ RandomPlace()
+comment3.params=direction
+comment3.target=void\ Kick(int)
+comment4.params=
+comment4.target=void\ TestScore()
+comment4.text=Notifies\ the\ parent\ if\ a\ goal\ was\ scored\ and\ resets\ the\ ball\ position.
+comment5.params=
+comment5.target=java.awt.Point\ GetLocation()
+comment6.params=
+comment6.target=void\ StopBall()
+comment7.params=gc\ ClipRect
+comment7.target=void\ Erase(java.awt.Graphics,\ java.awt.Rectangle)
+comment8.params=gc\ ClipRect
+comment8.target=void\ Draw(java.awt.Graphics,\ java.awt.Rectangle)
+comment9.params=Delta
+comment9.target=void\ Translate(java.awt.Point)
+comment9.text=\ \ This\ function\ is\ called\ in\ response\ to\ the\ ball's\ requesting\ a\ BallAction\ from\nWorld.\ \ Never\ call\ it\ directly\ -\ the\ redraw\ won't\ be\ handled\ properly.
+numComments=12

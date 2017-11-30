@@ -1,0 +1,23 @@
+#BlueJ class context
+comment0.target=Team
+comment1.params=parent\ side
+comment1.target=Team(World,\ int)
+comment2.params=
+comment2.target=void\ ResetTeam()
+comment2.text=Places\ the\ teams\ back\ in\ their\ starting\ positions.\ \ Does\ not\ affect\ their\ threads\ at\ all.
+comment3.params=ID
+comment3.target=java.awt.Point\ GetPlayerLocation(int)
+comment4.params=target
+comment4.target=int\ IsPlayerAt(java.awt.Point)
+comment4.text=\ \ Returns\ a\ number\ from\ 1\ to\ 4\ identifying\ the\ player\ at\ a\ given\ position.\ \ It\ returns\ 0\nif\ there's\ noone\ there.
+comment5.params=
+comment5.target=int\ GetSide()
+comment6.params=
+comment6.target=void\ InitializePoint()
+comment7.params=
+comment7.target=void\ WonPoint()
+comment8.params=
+comment8.target=void\ LostPoint()
+comment9.params=
+comment9.target=void\ GameOver()
+numComments=10

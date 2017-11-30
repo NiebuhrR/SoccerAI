@@ -1,0 +1,6 @@
+#BlueJ class context
+comment0.target=JavaSoccer
+comment0.text=\ \ This\ is\ the\ starter\ class\ for\ JavaSoccer.\ \ It\ creates\ an\ instance\ of\ World.\ \ \ I\ probably\ should\n\ \ \ \ \ \ have\ just\ put\ main()\ in\ World,\ but\ I\ always\ feel\ funny\ creating\ a\ class\ from\ within\ itself\ and\n\ \ \ \ \ \ this\ way\ I\ can\ create\ cool\ sounding\ classes\ like\ World\ without\ the\ user\ having\ to\ know\nabout\ it\ when\ they\ type\ "java\ World"
+comment1.params=args
+comment1.target=void\ main(java.lang.String[])
+numComments=2

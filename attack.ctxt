@@ -1,0 +1,24 @@
+#BlueJ class context
+comment0.target=attack
+comment0.text=\n\ Write\ a\ description\ of\ class\ attack\ here.\n\n\ @author\ (your\ name)\n\ @version\ (a\ version\ number\ or\ a\ date)\n
+comment1.params=
+comment1.target=void\ InitializeGame()
+comment10.params=
+comment10.target=int\ getAction()
+comment2.params=
+comment2.target=void\ InitializePoint()
+comment3.params=
+comment3.target=void\ WonPoint()
+comment4.params=
+comment4.target=void\ LostPoint()
+comment5.params=
+comment5.target=void\ GameOver()
+comment6.params=
+comment6.target=void\ GetInfo()
+comment7.params=
+comment7.target=int\ CutOff()
+comment8.params=playernum
+comment8.target=int\ NextToBall(int)
+comment9.params=playernum
+comment9.target=int\ GoAfterBall(int)
+numComments=11

@@ -1,0 +1,33 @@
+#BlueJ class context
+comment0.target=kickers
+comment0.text=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\n\n\tkickers.java\n\n\tBased\ upon\ a\ team\ by\:\n\tTucker\ Balch\t\n\n\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=
+comment1.params=ID
+comment1.target=int\ getAction(int)
+comment10.params=
+comment10.target=void\ GameOver()
+comment10.text=-----------------------------------------------------\n\ \ \ \ \ \ \n\ \ \ \ \ \ game_over()\n\ \ \ \ \ \ \n\ \ \ \ \ \ This\ function\ is\ called\ once\ at\ the\ end\ of\n\ \ \ \ \ \ the\ game.\ \ You\ can\ leave\ it\ empty,\ or\ put\ code\ \n\ \ \ \ \ \ here\ to\ save\ things\ to\ a\ file,\ etc.\n\ \ \ \ \ \ \n-----------------------------------------------------
+comment2.params=ball_direction\ x\ y
+comment2.target=int\ player1(int,\ int,\ int)
+comment2.text=-----------------------------------------------------\n\n\tplayer1()\n\n-----------------------------------------------------
+comment3.params=ball_direction\ x\ y
+comment3.target=int\ player2(int,\ int,\ int)
+comment3.text=-----------------------------------------------------\n\ \ \ \ \ \ \n\ \ \ \ \ \ player2()\n\ \ \ \ \ \ \n-----------------------------------------------------
+comment4.params=ball_direction\ x\ y
+comment4.target=int\ player3(int,\ int,\ int)
+comment4.text=-----------------------------------------------------\n\ \ \ \ \ \ \n\ \ \ \ \ \ player3()\n\ \ \ \ \ \ \n-----------------------------------------------------
+comment5.params=ball_direction\ x\ y
+comment5.target=int\ player4(int,\ int,\ int)
+comment5.text=-----------------------------------------------------\n\ \ \ \ \ \ \n\ \ \ \ \ \ player4()\n\ \ \ \ \ \ \n-----------------------------------------------------
+comment6.params=
+comment6.target=void\ InitializeGame()
+comment6.text=-----------------------------------------------------\n\ \ \ \ \ \ \n\ \ \ \ \ \ initialize_game()\n\ \ \ \ \ \ \n\ \ \ \ \ \ This\ function\ is\ called\ only\ once\ per\n\ \ \ \ \ \ game,\ before\ play\ begins.\ \ You\ can\ leave\ it\n\ \ \ \ \ \ empty,\ or\ put\ code\ here\ to\ initialize\ your\n\ \ \ \ \ \ variables,\ etc.\n\ \ \ \ \ \ \n-----------------------------------------------------
+comment7.params=
+comment7.target=void\ InitializePoint()
+comment7.text=-----------------------------------------------------\n\ \ \ \ \ \ \n\ \ \ \ \ \ initialize_point()\n\ \ \ \ \ \ \n\ \ \ \ \ \ This\ function\ is\ called\ once\ per\ point,\ just\n\ \ \ \ \ \ before\ play\ begins\ for\ that\ point.\n\ \ \ \ \ \ You\ can\ leave\ it\ empty,\ or\ put\ code\ here\ to\ initialize\ \n\ \ \ \ \ \ your\ variables,\ etc.\n\ \ \ \ \ \ \n-----------------------------------------------------
+comment8.params=
+comment8.target=void\ LostPoint()
+comment8.text=-----------------------------------------------------\n\ \ \ \ \ \ \n\ \ \ \ \ \ lost_point()\n\ \ \ \ \ \ \n\ \ \ \ \ \ If\ your\ team\ loses\ a\ point,\ this\ function\ is\n\ \ \ \ \ \ called,\ otherwise,\ if\ you\ win\ the\ point,\ won_point()\n\ \ \ \ \ \ is\ called.\ \ You\ can\ leave\ it\ empty,\ or\ put\ code\ here\ \n\ \ \ \ \ \ for\ negative\ re-inforcement,\ etc.\n\ \ \ \ \ \ \n-----------------------------------------------------
+comment9.params=
+comment9.target=void\ WonPoint()
+comment9.text=-----------------------------------------------------\n\ \ \ \ \ \ \n\ \ \ \ \ \ won_point()\n\ \ \ \ \ \ \n\ \ \ \ \ \ If\ your\ team\ wins\ a\ point,\ this\ function\ is\n\ \ \ \ \ \ called,\ otherwise,\ if\ you\ lose\ the\ point,\ lost_point()\n\ \ \ \ \ \ is\ called.\ \ You\ can\ leave\ it\ empty,\ or\ put\ code\ here\ \n\ \ \ \ \ \ for\ positive\ re-inforcement,\ etc.\n\ \ \ \ \ \ \n-----------------------------------------------------
+numComments=11

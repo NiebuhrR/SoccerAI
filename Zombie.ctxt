@@ -1,0 +1,8 @@
+#BlueJ class context
+comment0.target=Zombie
+comment1.params=
+comment1.target=Zombie()
+comment2.params=
+comment2.target=int\ getAction()
+comment2.text=\ \ Over\ ride\ this\ function\ to\ give\ the\ class\ unique\ behavior\ (i.e.\ make\ it\ do\ something\nintelligent).
+numComments=3
