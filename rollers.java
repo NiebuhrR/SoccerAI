@@ -236,7 +236,7 @@ public class rollers extends Player {
     }
 
 
-    // WHAT EACH ROLES DO
+    // WHAT EACH ROLES DO:
     public int Lead () {
       int i, kickSouth;
       int x = GetLocation().x;
