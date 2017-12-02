@@ -238,7 +238,7 @@ public class rollers extends Player {
 
     // WHAT EACH ROLES DO:
     public int Lead () {
-      int i, kickSouth;
+      int i, numPlayersAbove;
       int x = GetLocation().x;
       int y = GetLocation().y;
 
@@ -248,133 +248,160 @@ public class rollers extends Player {
 	  ((Look(SOUTHWEST) == BALL) || (Look(WEST) == BALL) || (Look(NORTHWEST) == BALL)))
 	    return KICK;
       
-      /* Try to kick away from the bulk of the players */
-      kickSouth = 0;
+      /* Calculate the number of players above you, positive for above and negative for below */
+      numPlayersAbove = 0;
       for (i=0; i<4; i++) {
 	    if ((y < FieldY() - 4) && (ply[i] < y)) {
-	        kickSouth++;
+	        numPlayersAbove++;
 	    }
 	    if ((y > 5) && (ply[i] > y)) {
-	        kickSouth--;
+	        numPlayersAbove--;
 	    }
       }
       
-      /* Kick south if we "should" kick south or if we are near defending goal */
+      /* If the BAll is in Look(SW) */
       if (Look(SOUTHWEST) == BALL) {
-        if ((x > 3 * FieldX() / 4) || (kickSouth > 0)) {
+        // if ball is far away from goal and if there is at least one player above the leader, kick it in SW direction
+        if ((x > 3 * FieldX() / 4) || (numPlayersAbove > 0)) {
           return KICK;
         }
-        /* else try to move to kick straight west */
+        // if not, go South, now in Look(West) condition
         return SOUTH;
       }
       
-      /* Similarly for north */
+      /* If the ball is Look(N) */
       if (Look(NORTH) == BALL) {
-        if ((x > 3 * FieldX() / 4) || (kickSouth < 0)) {
+        // if ball is far away from goal and there is no player above the leader, kick it in N direction
+        // NOTE: THIS IS WRONG, SHOULD RETURN NORTHEAST (MAYBE)
+        if ((x > 3 * FieldX() / 4) || (numPlayersAbove < 0)) {
           return KICK;
         }
+        // if ball is close to goal and there is at least one player above the leader, bump the ball up north
 	    return NORTH;
       }
-      
+
+      // if the ball is Look(W)
       if (Look(WEST) == BALL) {
-        /* If there is a strong preference to kick the ball north or south,
-           try to move to do so */
-        if (kickSouth >= 3) {
+        // if all three other players are above the leader, bump the ball up north
+        if (numPlayersAbove >= 3) {
           return NORTH;
         }
-        if (kickSouth <= -3) {
+        // if all three other players are below the leader, the leader moves south
+        // NOTE: THIS IS WRONG, SHOULD RETURN NORTHWEST (MAYBE)
+        if (numPlayersAbove <= -3) {
           return SOUTH;
         }
-	    /* Otherwise kick toward the goal */
+
+	    // if there is at least one player above and at least one player below the leader
+        // then there is support on both sides, kick the ball west (toward goal)
 	    return KICK;
       }
-      
+
+      // HELLO: ANOTHER LOOK(NORTH) FUNCTION BUT FOR OPPONENTS INSTEAD (MAKE NO SENSE)
+      // if ball is look(N)
       if (Look(NORTH) == BALL) {
-        /* If an opponent can kick toward my goal, try to kick the ball
-           away */
+
+        // if there is an opponent both in the west and northwest directions, kick the ball up north
+        // NOTE: THIS WRONG, OUR IF CLAUSE SHOULD INCLUDE CONDITIONS FOR BOTH BALL & OPPONENT RATHER THAN
+        // SEPRATE THEM LIKE THIS
         if (Look(WEST) == OPPONENT && Look(NORTHWEST) == OPPONENT) {
           return KICK;
         }
 
-        /* If ball is near my defending goal, really try to kick it */
+        // if the ball is near our goal (defending goal), and there is an opponent either in the West
+        // or in the northwest, then kick it up north
+        // NOTE: not sure if should kick the ball up north??
         if ((x > 3 * FieldX() / 4) &&
             (Look(WEST) == OPPONENT || Look(NORTHWEST) == OPPONENT)) {
           return KICK;
         }
 
-        /* If there are no opponents and I want to kick south, move to try
-           to do so */
-        if ((kickSouth >= 0) && Look(NORTHEAST) == EMPTY) {
+        // if there is at least one player above and there is nothing in the northeast direction
+        // go northeast
+        if ((numPlayersAbove >= 0) && Look(NORTHEAST) == EMPTY) {
           return(NORTHEAST);
         }
 
-        /* else if I want to kick north, just move E so I can kick NORTHWEST */
+        // if none of the condition above, the leader move east, so that the new condition is Look(NW)
+        // NOTE: THIS MAKES NO SENSE BECAUSE THERE IS NO LOOK(NW) CONDITION
         return(EAST);
       }
-      
+
+      // if the ball is look(NE)
       if (Look(NORTHEAST) == BALL) {
-        /* If an opponent can get to the ball, get between it and the ball */
+        // if there is nothing in the north direction but there is an opponent in the northwest direction
+        // move up north
         if (Look(NORTH) == EMPTY && (Look(NORTHWEST) == OPPONENT)) {
           return(NORTH);
         }
-        /* else get between the ball and the defending goal */
+        // if not, move east so that the new condition is now Look(North)
         return(EAST);
       }
-	
+
+      // if the ball is look(E)
       if (Look(EAST) == BALL) {
-        /* Get into position to kick the ball, if possible */
-        if ((kickSouth > 0) && Look(NORTHEAST) == EMPTY) {
+        // if there is at least one player above the leader and there is nothing in northeast
+        // then go to the northeast, condition now becomes Look(South)
+        if ((numPlayersAbove > 0) && Look(NORTHEAST) == EMPTY) {
           return(NORTHEAST);
         }
-        if ((kickSouth < 0) && Look(SOUTHEAST) == EMPTY) {
+        // if there is no player above the leader and there is nothing in the southeast
+        // then go to southeast, condition now becomes Look(North)
+        if ((numPlayersAbove < 0) && Look(SOUTHEAST) == EMPTY) {
           return(SOUTHEAST);
         }
 
-        /* else try to block any opponents */
+        // if there is an opponent in the west direction, bump into the opponent by moving west
+        // QUESTION: DOES THIS MOVE THE OPPONENT BACK OR DOES THIS MEAN THAT THERE IS BASICALLY NO MOVEMENT
         if (Look(WEST) == OPPONENT) {
           return(WEST);
         }
 
-        /* else just move out of the way */
+        // if there is nothing in the north, then move north
         if (Look(NORTH) == EMPTY) {
           return(NORTH);
         }
+
+        // if none of the condition above is satisfied, then move south
         return(SOUTH);
       }
-      
+
+      // if ball is look(SE)
       if (Look(SOUTHEAST) == BALL) {
-        /* If an opponent can get to the ball, get between it and the ball */
+        // if there is nothing in the south and an opponent in the southwest
+        // then move south to block the opponent
         if (Look(SOUTH) == EMPTY && (Look(SOUTHWEST) == OPPONENT)) {
           return(SOUTH);
         }
-        /* else get between the ball and the defending goal */
+        // if none of the condition above, then move east, and new condition becomes look(S)
         return(EAST);
       }
-      
+
+      // if ball is look(S)
       if (Look(SOUTH) == BALL) {
-        /* If an opponent can kick toward my goal, try to kick the ball
-           away */
+        // if there is an opponent in the west and the southwest, then kick the ball south
         if (Look(WEST) == OPPONENT && (Look(SOUTHWEST) == OPPONENT)) {
           return(KICK);
         }
 
-        /* If ball is near my defending goal, really try to kick it */
+        // if the ball is near the defending goal and there is opponent in either the south
+        // or the southwest, then kick the ball south
         if ((x > 3 * FieldX() / 4) &&
             (Look(WEST) == OPPONENT || Look(SOUTHWEST) == OPPONENT)) {
           return(KICK);
         }
 
-        /* If there are no opponents and I want to kick south, move to try
-           to do so */
-        if ((kickSouth >= 0) && Look(SOUTHEAST) == EMPTY) {
+        // if there is at least one player above the leader and there is nothing in the southeast
+        // move to southeast, condition now becomes look(W)
+        if ((numPlayersAbove >= 0) && Look(SOUTHEAST) == EMPTY) {
           return(SOUTHEAST);
         }
 
-        /* else if I want to kick north, just move E so I can kick NORTHWEST */
+        // if none of the condition is satisfied, go to east, condition now becomes look(S)
         return(EAST);
       }
       
-      /* else just move toward the ball */
+      // if none of the condition above, just move towards the ball
       return(GetBallDirection());
     }
 
