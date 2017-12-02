@@ -2,6 +2,7 @@
 /*===========================================================================
 
 	kickers.java
+	A Team with 4 players
 
 	Based upon a team by:
 	Tucker Balch	
@@ -33,7 +34,7 @@ public class kickers extends Player
 /*-----------------------------------------------------
 
 	player1()
-
+	
 -----------------------------------------------------*/
     public int player1(int ball_direction, int x, int y)
     {

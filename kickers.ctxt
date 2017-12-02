@@ -1,6 +1,6 @@
 #BlueJ class context
 comment0.target=kickers
-comment0.text=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\n\n\tkickers.java\n\n\tBased\ upon\ a\ team\ by\:\n\tTucker\ Balch\t\n\n\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=
+comment0.text=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\n\n\tkickers.java\n\tA\ Team\ with\ 4\ players\n\n\tBased\ upon\ a\ team\ by\:\n\tTucker\ Balch\t\n\n\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=\=
 comment1.params=ID
 comment1.target=int\ getAction(int)
 comment10.params=
@@ -8,7 +8,7 @@ comment10.target=void\ GameOver()
 comment10.text=-----------------------------------------------------\n\ \ \ \ \ \ \n\ \ \ \ \ \ game_over()\n\ \ \ \ \ \ \n\ \ \ \ \ \ This\ function\ is\ called\ once\ at\ the\ end\ of\n\ \ \ \ \ \ the\ game.\ \ You\ can\ leave\ it\ empty,\ or\ put\ code\ \n\ \ \ \ \ \ here\ to\ save\ things\ to\ a\ file,\ etc.\n\ \ \ \ \ \ \n-----------------------------------------------------
 comment2.params=ball_direction\ x\ y
 comment2.target=int\ player1(int,\ int,\ int)
-comment2.text=-----------------------------------------------------\n\n\tplayer1()\n\n-----------------------------------------------------
+comment2.text=-----------------------------------------------------\n\n\tplayer1()\n\t\n-----------------------------------------------------
 comment3.params=ball_direction\ x\ y
 comment3.target=int\ player2(int,\ int,\ int)
 comment3.text=-----------------------------------------------------\n\ \ \ \ \ \ \n\ \ \ \ \ \ player2()\n\ \ \ \ \ \ \n-----------------------------------------------------
