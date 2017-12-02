@@ -244,7 +244,7 @@ public class rollers extends Player {
 
       /* If lead is east of the ball and an opponent is around, get the ball
 	 out of here */
-      if ((GetOpponentDistance(1) < 2) && 
+      if ((GetOpponentDistance(1) < 2) &&
 	  ((Look(SOUTHWEST) == BALL) || (Look(WEST) == BALL) || (Look(NORTHWEST) == BALL)))
 	    return KICK;
       
@@ -387,30 +387,49 @@ public class rollers extends Player {
       y = GetLocation().y;
 
       /* If near the ball, act like a leader */
+      // close to the ball but not the closest so player is still not the leader
       if (GetBallDistance() < 2) {
         return(Lead());
       }
 
       /* Try to get into position */
+      // if there's no ball or opponent right above and the leader is above you
+      // ns = north
       if (Look(NORTH) == EMPTY && (y > ply[leader] - WINGSPAN)) {
         ns = NORTH;
       }
+
+      // if there's no ball or opponent below you and the leader is below you
+      // ns = south
       if (Look(SOUTH) == EMPTY && (y < ply[leader] - WINGSPAN)) {
         ns = SOUTH;
       }
+
+      // if player is somewhere in front of leader
+      // ns = south
       if ((x < plx[leader]) && (y == ply[leader])) {
         ns = SOUTH;
       }
+
+      // if there's no ball or opponent to the left and the leader is somewhere infront of you
+      // ew = WEST
       if (Look(WEST) == EMPTY && (x > plx[leader] + WINGSPAN)) {
         ew = WEST;
       }
+
+      // If there's no ball or opponet to the right of you and the leaer is somewhere behind you
+      // ew = east
       if (Look(EAST) == EMPTY && (x < plx[leader] + WINGSPAN)) {
         ew = EAST;
       }
 
+      // If there's no ball or opponet to the right of you and the leader is somewhere behind you
+      // AND if there's no ball or opponent right above and the leader is above you
+      // In short: Leader is somewhere north east
       if ((ew == EAST) && (ns == NORTH)) {
         return(NORTHEAST);
       }
+
       if ((ew == EAST) && (ns == SOUTH)) {
         return(SOUTHEAST);
       }
