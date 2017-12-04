@@ -194,14 +194,15 @@ public class rollers extends Player {
       for (i=0; i<4; i++) {
           roles[i] = 0;
       }
-      
+
+      // setting the new lead
       leader = newLead;
       roles[leader] = Lead;
       
       /* southernmost unassigned player is south wing */
       score = -1;
       for (i=0; i<4; i++) {
-        if (roles[i] == 0) {
+        if (roles[i] == 0) { // if player is unassigned
           if (ply[i] > score) {
                 score = ply[i];
                 good = i;
