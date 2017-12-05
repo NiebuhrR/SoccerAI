@@ -317,9 +317,8 @@ ADDITION TO CODE:
 
 /* QUYEN'S NOTE: HOW TO FOLLOW BALL
 
-My algorithm for how to follow the ball efficiently, but I don't know if this should be applied for all players, or for just the leader yet; 
-we probably need to discuss this. The point generally is to always get behind the ball, even if it takes longer to do it. That's why
-I don't move towards the ball that often, but rather take whatever route necessary to get behind the ball.
+My algorithm for how to follow the ball efficiently for supporters. These are designed to block the ball from 
+opponents or cutting off as they are trying to get the ball 
  
  // if the ball is in the north direction, if northeast is empty, go to northeast, then north
  // if northeast is not empty, just go north
