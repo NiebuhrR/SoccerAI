@@ -51,6 +51,8 @@ public class TeamQGK extends Player {
 
         int action = WEST;
 
+        Behave();
+
         // My IFO
         player_x[0] = GetLocation().x;
         player_y[0] = GetLocation().y;
@@ -135,7 +137,7 @@ public class TeamQGK extends Player {
                 ((BallDir == EAST) || (BallDir == NORTHEAST)
                         || (BallDir == SOUTHEAST) || (BallDir == NORTH)
                         || (BallDir == SOUTH))) {
-            haveBall = 1;
+            haveBall = CONTROL_TIME;
             return 1;
         }
         return 0;
@@ -171,13 +173,13 @@ public class TeamQGK extends Player {
         }
 
         //set new leader
-        if(haveBall(newLead) == 1){
+        if(have_ball[newLead] == 1){
+            System.out.println("YES");
             roles[newLead] = LEAD;
         }
         else {
             roles[newLead] = SUPPORT;
         }
-
 
         for(int i = 0; i < 4; i++){
             //if role unassigned
@@ -192,7 +194,7 @@ public class TeamQGK extends Player {
 
     public int defensive(){
         int ballDir = GetBallDirection();
-        int player_y = GetLocation().y;
+
 
 
         // if the ball is in the north direction, if northeast is empty, go to northeast, then north
@@ -269,14 +271,14 @@ public class TeamQGK extends Player {
 
     // WHAT EACH ROLES DO:
     public int Lead () {
-
+        int player_y = GetLocation().y;
         //START OFFENSE
 
 
 
         if(Look(NORTH) == BALL){
             if(Look(WEST) == OPPONENT && Look(NORTHWEST) == OPPONENT) {
-                if(player_y > FieldY()/3){
+                if(player_y > 5){
                     return KICK;
                 }
                 return NORTH;
@@ -290,7 +292,7 @@ public class TeamQGK extends Player {
 
         else if(Look(SOUTH) == BALL){
             if(Look(WEST) == OPPONENT || Look(SOUTHWEST) == OPPONENT){
-                if(player_y > 2 * FieldY()/3){
+                if(player_y > 30){
                     return KICK;
                 }
                 return SOUTH;
