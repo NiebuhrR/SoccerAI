@@ -7,7 +7,7 @@ public class TeamQGK extends Player {
     static final int CONTROL_TIME = 13;
     static final int WINGSPAN = 8;
 
-    static int haveBall;
+    static int haveBall = 0;
 
     static final int LEAD = 1;
     static final int SUPPORT = 2;
@@ -61,7 +61,7 @@ public class TeamQGK extends Player {
         switch (roles[0]) {
             case LEAD: action =  Lead();
                 break;
-            case SUPPORT: action =  Support();
+            case SUPPORT: action =  defensive();
                 break;
         }
         return action;
@@ -80,7 +80,7 @@ public class TeamQGK extends Player {
         switch (roles[1]) {
             case LEAD: action =  Lead();
                 break;
-            case SUPPORT: action =  Support();
+            case SUPPORT: action =  defensive();
                 break;
         }
         return action;
@@ -99,7 +99,7 @@ public class TeamQGK extends Player {
         switch (roles[2]) {
             case LEAD: action =  Lead();
                 break;
-            case SUPPORT: action =  Support();
+            case SUPPORT: action =  defensive();
                 break;
         }
         return action;
@@ -118,7 +118,7 @@ public class TeamQGK extends Player {
         switch (roles[3]) {
             case LEAD: action =  Lead();
                 break;
-            case SUPPORT: action =  Support();
+            case SUPPORT: action =  defensive();
                 break;
         }
         return action;
@@ -135,7 +135,7 @@ public class TeamQGK extends Player {
                 ((BallDir == EAST) || (BallDir == NORTHEAST)
                         || (BallDir == SOUTHEAST) || (BallDir == NORTH)
                         || (BallDir == SOUTH))) {
-            haveBall = CONTROL_TIME;
+            haveBall = 1;
             return 1;
         }
         return 0;
@@ -144,33 +144,27 @@ public class TeamQGK extends Player {
     // Takes care of switching the roles for each player depending on their distance to the ball
     public void Behave () {
         int newLead = 0;
-        int hasBall = 0;
+
 
         for(int i = 0; i < 4 ; i++){
-            if(dist_to_ball[i] == 1) { //1 is not the final number here
-
-                // want to prioritize NE and SE players to be lead
-                if(direct_to_ball[i] == NORTHEAST || direct_to_ball[i] == SOUTHEAST){
-                    newLead = i;
-                    hasBall = 1;
-                    break;
-                }
-            }
-            else if(direct_to_ball[i] < direct_to_ball[newLead]){
-
-                if(dist_to_ball[i] == 1){
-                    hasBall = 1;
-                }
-
+//            if(dist_to_ball[i] == 1) { //1 is not the final number here
+//
+//                // want to prioritize NE and SE players to be lead
+//                if(direct_to_ball[i] == NORTHEAST || direct_to_ball[i] == SOUTHEAST){
+//                    newLead = i;
+//                    break;
+//                }
+//            }
+            if(direct_to_ball[i] < direct_to_ball[newLead]){
                 newLead = i;
             }
         }
-        Regroup(newLead, hasBall);
+        Regroup(newLead);
 
     }
 
     // reassigns roles
-    public void Regroup (int newLead, int hasBall) {
+    public void Regroup (int newLead) {
         //initialize roles --> all unassigned
         for(int i = 0; i < 4; i++){
             roles[i] = 0;
@@ -190,41 +184,96 @@ public class TeamQGK extends Player {
 
     /////////////////////////////////////////////////////////////////////////
 
-    // WHAT EACH ROLES DO:
-    public int Lead () {
-        int numOpponetsAbove = 0;
-        int x = GetLocation().x;
-        int y = GetLocation().y;
+    public int defensive(){
+        int ballDir = GetBallDirection();
 
-        //case 1: if there are a lot of opponents above leader, go N to kick SW
-        //case 2: if there are a lof of opponents below leader, go S to kick NW
-
-        //check for the number of opponents above leader
-        for(int i = 0; i < 4; i++){
-            int opponentDirection = GetOpponentDirection(i);
-            if(opponentDirection == NORTH || opponentDirection == NORTHEAST || opponentDirection == NORTHWEST){
-                numOpponetsAbove++;
+        // if the ball is in the north direction, if northeast is empty, go to northeast, then north
+        // if northeast is not empty, just go north
+        if(ballDir == NORTH){
+            if(Look(NORTHEAST) == EMPTY){
+                return NORTHEAST;
             }
-            else if(opponentDirection == SOUTH || opponentDirection == SOUTHEAST || opponentDirection == SOUTHWEST){
-                numOpponetsAbove--;
-            }
+            return NORTH;
         }
 
-        if(Look(WEST) == BALL){
-            // at least 1 opponent above
-            if(numOpponetsAbove > 0){
+        // if the ball is in the northeast direction, if northeast is empty, go to northeast, then north
+        // if northeast is not empty, just go north
+        else if(ballDir == NORTHEAST){
+            if(Look(NORTHEAST) == EMPTY){
+                return NORTHEAST;
+            }
+            return NORTH;
+        }
+
+        // if the ball is in the east direction, if east is empty, go to east, then northeast
+        // if east is not empty, just go northeast
+        else if(ballDir == EAST){
+            if(Look(EAST) == EMPTY){
+                return EAST;
+            }
+            return NORTHEAST;
+        }
+
+        // if the ball is in the southeast direction, if southeast is empty, go southeast, then south
+        // if southeast is not empty, just go south
+        else if (ballDir == SOUTHEAST) {
+            if (Look(SOUTHEAST) == EMPTY) {
+                return SOUTHEAST;
+            }
+            return SOUTH;
+        }
+
+        // if the ball is in the south direction, if southeast is empty, go southeast, then east
+        // if southeast is not empty, just go east  --> this is a little wonky, but i want the new
+        // condition becomes southwest...
+        else if (ballDir == SOUTH) {
+            if (Look(SOUTHEAST) == EMPTY) {
+                return SOUTHEAST;
+            }
+            return EAST;
+        }
+
+        // if the ball is in the southwest direction, if southeast is empty, go southeast, then south
+        // if southeast is not empty, then just go south --> the point is to get behind the ball
+        else if (ballDir== SOUTHWEST) {
+            if (Look(SOUTHEAST) == EMPTY) {
+                return SOUTHEAST;
+            }
+            return SOUTH;
+        }
+
+        // if the ball is in the west direction, just go west
+        else if (ballDir == WEST) {
+            return WEST;
+        }
+
+        else if (ballDir == NORTHWEST) {
+            if (Look(NORTHEAST) == EMPTY) {
                 return NORTH;
             }
+            return NORTH;
+        }
 
-            // atleast 1 opponent above
-            if(numOpponetsAbove <0){
-                return SOUTH;
+        return ballDir;
+
+    }
+
+    // WHAT EACH ROLES DO:
+    public int Lead () {
+        if(Look(NORTHEAST) == BALL){
+            if(Look(EAST) == EMPTY){
+                return EAST;
             }
+            else if(Look(NORTH) == EMPTY){
+                return NORTH;
+            }
+            return SOUTHEAST;
         }
 
-        if(Look(NORTHWEST) == BALL || Look(SOUTHWEST) == BALL){
-            return KICK;
-        }
+
+
+
+
         return(GetBallDirection());
     }
 
@@ -248,7 +297,14 @@ public class TeamQGK extends Player {
         }
         return BALL;
     }
+
+    // team doesn't have ball
+
 }
+
+
+
+
 
 
 /*
