@@ -59,7 +59,7 @@ public class TeamQGK extends Player {
 
         //checks for the role of player 1
         switch (roles[0]) {
-            case LEAD: action =  defensive();
+            case LEAD: action =  Lead();
                 break;
             case SUPPORT: action =  defensive();
                 break;
@@ -97,7 +97,7 @@ public class TeamQGK extends Player {
         have_ball[2] = HaveBall(2);
 
         switch (roles[2]) {
-            case LEAD: action =  defensive();
+            case LEAD: action =  Lead();
                 break;
             case SUPPORT: action =  defensive();
                 break;
@@ -116,7 +116,7 @@ public class TeamQGK extends Player {
 
 
         switch (roles[3]) {
-            case LEAD: action =  defensive();
+            case LEAD: action =  Lead();
                 break;
             case SUPPORT: action =  defensive();
                 break;
@@ -171,7 +171,13 @@ public class TeamQGK extends Player {
         }
 
         //set new leader
-        roles[newLead] = LEAD;
+        if(haveBall(newLead) == 1){
+            roles[newLead] = LEAD;
+        }
+        else {
+            roles[newLead] = SUPPORT;
+        }
+
 
         for(int i = 0; i < 4; i++){
             //if role unassigned
@@ -186,6 +192,8 @@ public class TeamQGK extends Player {
 
     public int defensive(){
         int ballDir = GetBallDirection();
+        int player_y = GetLocation().y;
+
 
         // if the ball is in the north direction, if northeast is empty, go to northeast, then north
         // if northeast is not empty, just go north
@@ -254,7 +262,41 @@ public class TeamQGK extends Player {
             return NORTH;
         }
 
+
+        return ballDir;
+
+    }
+
+    // WHAT EACH ROLES DO:
+    public int Lead () {
+
         //START OFFENSE
+
+
+
+        if(Look(NORTH) == BALL){
+            if(Look(WEST) == OPPONENT && Look(NORTHWEST) == OPPONENT) {
+                if(player_y > FieldY()/3){
+                    return KICK;
+                }
+                return NORTH;
+            }
+            // if the closest oppenent's distance is less than 3
+            else if(GetOpponentDistance(1) < 3){
+                return NORTH;
+            }
+            return NORTHEAST;
+        }
+
+        else if(Look(SOUTH) == BALL){
+            if(Look(WEST) == OPPONENT || Look(SOUTHWEST) == OPPONENT){
+                if(player_y > 2 * FieldY()/3){
+                    return KICK;
+                }
+                return SOUTH;
+            }
+            return SOUTHEAST;
+        }
 
         // If ball is North East
         else if(Look(NORTHEAST) == BALL){
@@ -326,14 +368,8 @@ public class TeamQGK extends Player {
             return WEST;
         }
 
-        //return ballDir;
 
-    }
 
-    // WHAT EACH ROLES DO:
-    public int Lead () {
-
-        return (GetBallDirection());
 
     }
 
