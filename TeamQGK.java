@@ -144,6 +144,7 @@ public class TeamQGK extends Player {
     // Takes care of switching the roles for each player depending on their distance to the ball
     public void Behave () {
         int newLead = 0;
+        int hasBall = 0;
 
         for(int i = 0; i < 4 ; i++){
             if(dist_to_ball[i] == 1) { //1 is not the final number here
@@ -151,19 +152,25 @@ public class TeamQGK extends Player {
                 // want to prioritize NE and SE players to be lead
                 if(direct_to_ball[i] == NORTHEAST || direct_to_ball[i] == SOUTHEAST){
                     newLead = i;
+                    hasBall = 1;
                     break;
                 }
             }
             else if(direct_to_ball[i] < direct_to_ball[newLead]){
+
+                if(dist_to_ball[i] == 1){
+                    hasBall = 1;
+                }
+
                 newLead = i;
             }
         }
-        Regroup(newLead);
+        Regroup(newLead, hasBall);
 
     }
 
     // reassigns roles
-    public void Regroup (int newLead) {
+    public void Regroup (int newLead, int hasBall) {
         //initialize roles --> all unassigned
         for(int i = 0; i < 4; i++){
             roles[i] = 0;
@@ -242,3 +249,68 @@ public class TeamQGK extends Player {
         return BALL;
     }
 }
+
+
+/*
+Leader
+
+CASE 1: Leader doesn’t have ball
+    * want to move towards ball
+    * return GetBallDirection()
+
+CASE 2: Leader has ball
+
+    a) an opponent is blocking us from kicking the ball (in any direction)
+
+        if(opponentDir == ballDir && opponentDist[i] == 2) {
+            * want to be a blocker, so opponent can't kick from their
+            * want other team member to rescue us: let support move toward ball
+            * leader stays the same, closest support acts like the leader
+        }
+
+    b) if none of the opponents are blocking us from kicking the ball
+    
+        i. if at least one opponent is really close to us but we're not block:
+            (meaning opponent can easily steal ball)
+            * idk what to do?
+            * maybe, just kick the ball using ballDir?
+
+        ii. if(GetOpponentDistance(1) > 3){ //checks for closet opponent
+            * check where we have the most opponents (N or S)
+
+                if(numOppAbove >= 2) { //at least 2 above
+                    * want to kick to southward (S or SW)
+                    if (ballDir == S or SW ){ Kick } //if leader is N or NE of ball, getBallDir == S or SW
+
+                    if (ballDir == W){ // if leader is East of ball
+                        * want to move N so I can kick SW
+                        * tell support that leader is passing SW so they can go towards that area
+                    }
+
+                }
+                if(numOppAbove <= -2) { //at least 2 below
+                    * want to kick to southward (N or NW)
+                    if (ballDir from Leader == N or NW ){ Kick } //if leader is S or SE of ball, getBallDir == N or NW
+                    if (ballDir from Leader == W){
+                        * want to move S so I can kick NW
+                        * tell support that leader is passing NW so they can go towards that area
+                    }
+                }
+        }
+
+
+SUPPORT
+
+Case 1: team has ball
+    * if(dist_to_ball == 1) { act like a leader with ball; }
+    * if leader is about to pass, start moving to where the pass will be (would need a new "passing_N/S" state)
+
+Case 2: team doesn't have bal;
+    * want to move towards ball
+    * return GetBallDirection()
+
+ADDITION TO CODE:
+- behave keeps track if leader has ball because IDK how to check that in the Lead() function since we
+    don't know which player is the leader
+
+*/
