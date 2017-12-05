@@ -318,7 +318,7 @@ ADDITION TO CODE:
 /* QUYEN'S NOTE: HOW TO FOLLOW BALL
 
 My algorithm for how to follow the ball efficiently for supporters. These are designed to block the ball from 
-opponents or cutting off as they are trying to get the ball 
+opponents or cutting off as they are trying to get the ball
  
  // if the ball is in the north direction, if northeast is empty, go to northeast, then north
  // if northeast is not empty, just go north
@@ -394,5 +394,31 @@ opponents or cutting off as they are trying to get the ball
  return direct_to_ball;
  }
  */
+
+/* MORE NOTES FROM QUYEN: Strategy for leader when it has a ball
+ 
+ if Look(NORTH) == BALL {
+    // case 1: if there is immediate danger; i.e. if opponent is in the west or southwest directions
+    if Look(WEST) == OPPONENT or Look(NORTHWEST) == OPPONENT {
+        // if the player is low enough on the board, just kick the ball upwards (north)
+        if playerY > Y_THRESHOLD {
+            return KICK;
+        }
+        // if the player is not low enough on the board, nudge the ball upwards (north)
+        else {
+            return NORTH;
+        }
+    }
+    // case 2: if opponents are not adjacent to the ball but pretty are pretty near
+    // nudge the ball upwards (north)
+    else if dist_to_opponent < OPPONENT_THRESHOLD {
+        return NORTH;
+    }
+    // if none of the case above, go northeast to get behind the ball
+    else {
+        return NORTHEAST;
+    }
+ }
+*/
 
 
