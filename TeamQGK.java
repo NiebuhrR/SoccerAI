@@ -28,7 +28,7 @@ public class TeamQGK extends Player {
         player_y = new int[4];
         roles = new int[4];
         dist_to_ball = new int[4];
-        direct_to_ball = new int[4];
+        direct_to_ball = new int[8];
         player_look = new int[4][8];
         have_ball = new int[4];
 
@@ -314,3 +314,86 @@ ADDITION TO CODE:
     don't know which player is the leader
 
 */
+
+/* QUYEN'S NOTE: HOW TO FOLLOW BALL
+
+My algorithm for how to follow the ball efficiently, but I don't know if this should be applied for all players, or for just the leader yet; 
+we probably need to discuss this. The point generally is to always get behind the ball, even if it takes longer to do it. That's why
+I don't move towards the ball that often, but rather take whatever route necessary to get behind the ball.
+ 
+ // if the ball is in the north direction, if northeast is empty, go to northeast, then north
+ // if northeast is not empty, just go north
+ if direct_to_ball == NORTH {
+ if Look(NORTHEAST) == EMPTY {
+ return NORTHEAST
+ }
+ return NORTH;
+ }
+ 
+ // if the ball is in the northeast direction, if northeast is empty, go to northeast, then north
+ // if northeast is not empty, just go north
+ else if direct_to_ball == NORTHEAST {
+ if Look(NORTHEAST) == EMPTY {
+ return NORTHEAST;
+ }
+ return NORTH;
+ }
+ 
+ // if the ball is in the east direction, if east is empty, go to east, then northeast
+ // if east is not empty, just go northeast
+ else if direct_to_ball == EAST {
+ if Look(EAST) == EMPTY {
+ return EAST;
+ }
+ return NORTHEAST;
+ }
+ 
+ // if the ball is in the southeast direction, if southeast is empty, go southeast, then south
+ // if southeast is not empty, just go south
+ else if direct_to_ball == SOUTHEAST {
+ if Look(SOUTHEAST) == EMPTY {
+ return SOUTHEAST;
+ }
+ return SOUTH;
+ }
+ 
+ // if the ball is in the south direction, if southeast is empty, go southeast, then east
+ // if southeast is not empty, just go east  --> this is a little wonky, but i want the new
+ // condition becomes southwest...
+ else if direct_to_ball == SOUTH {
+ if Look(SOUTHEAST) == EMPTY {
+ return SOUTHEAST;
+ }
+ return EAST;
+ }
+ 
+ // if the ball is in the southwest direction, if southeast is empty, go southeast, then south
+ // if southeast is not empty, then just go south --> the point is to get behind the ball
+ else if direct_to_ball == SOUTHWEST {
+ if Look(SOUTHEAST) == EMPTY {
+ return SOUTHEAST;
+ }
+ return SOUTH;
+ }
+ 
+ // if the ball is in the west direction, just go west
+ else if direct_to_ball == WEST {
+ return WEST;
+ }
+ 
+ // if the ball is in the northwest direction, go northeast, then north
+ // if northeast is not empty, then just go north
+ else if direct_to_ball == NORTHWEST {
+ if Look(NORTHEAST) {
+ return NORTHEAST;
+ }
+ return NORTH;
+ }
+ 
+ // if none of the case above, just go towards the ball in the ball's direction
+ else {
+ return direct_to_ball;
+ }
+ */
+
+
