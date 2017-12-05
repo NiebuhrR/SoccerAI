@@ -149,15 +149,15 @@ public class TeamQGK extends Player {
 
 
         for(int i = 0; i < 4 ; i++){
-//            if(dist_to_ball[i] == 1) { //1 is not the final number here
-//
-//                // want to prioritize NE and SE players to be lead
-//                if(direct_to_ball[i] == NORTHEAST || direct_to_ball[i] == SOUTHEAST){
-//                    newLead = i;
-//                    break;
-//                }
-//            }
-            if(dist_to_ball[i] < dist_to_ball[newLead]){
+            if(dist_to_ball[i] == 1) { //1 is not the final number here
+
+                // want to prioritize NE and SE players to be lead
+                if(direct_to_ball[i] == NORTHEAST || direct_to_ball[i] == SOUTHEAST){
+                    newLead = i;
+                    break;
+                }
+            }
+            else if(dist_to_ball[i] < dist_to_ball[newLead]){
                 newLead = i;
             }
         }
@@ -272,12 +272,9 @@ public class TeamQGK extends Player {
     // WHAT EACH ROLES DO:
     public int Lead () {
         int player_y = GetLocation().y;
-        //START OFFENSE
-
-
 
         if(Look(NORTH) == BALL){
-            if(Look(WEST) == OPPONENT && Look(NORTHWEST) == OPPONENT) {
+            if(Look(WEST) == OPPONENT || Look(NORTHWEST) == OPPONENT) {
                 if(player_y > 5){
                     return KICK;
                 }
@@ -288,16 +285,6 @@ public class TeamQGK extends Player {
                 return NORTH;
             }
             return NORTHEAST;
-        }
-
-        else if(Look(SOUTH) == BALL){
-            if(Look(WEST) == OPPONENT || Look(SOUTHWEST) == OPPONENT){
-                if(player_y > 30){
-                    return KICK;
-                }
-                return SOUTH;
-            }
-            return SOUTHEAST;
         }
 
         // If ball is North East
@@ -349,25 +336,31 @@ public class TeamQGK extends Player {
             }
         }
 
-        // ball in South East
-        else if(Look(SOUTHEAST) == BALL){
+        else if(Look(SOUTH) == BALL){
+            if(Look(WEST) == OPPONENT || Look(SOUTHWEST) == OPPONENT){
+                if(player_y < 30){
+                    return KICK;
+                }
+                return SOUTH;
+            }
+
+            else  if(GetOpponentDistance(1) < 3){
+                return SOUTH;
+            }
             return SOUTHEAST;
         }
 
-        // ball in East
-        else if(Look(EAST) == EMPTY){
-            return EAST;
-        }
-
-        else if(Look(SOUTHWEST) == BALL || Look(WEST) == BALL || Look(NORTHWEST) == BALL){
+        else if(Look(SOUTHWEST) == BALL){
             return KICK;
         }
-
-        else{
-            if(Look(SOUTHWEST) == EMPTY){
-                return SOUTHWEST;
-            }
-            return WEST;
+        else if(Look(WEST) == BALL){
+            return  KICK;
+        }
+        else if(Look(NORTHWEST) == BALL){
+            return KICK;
+        }
+        else {
+            return GetBallDirection();
         }
 
 
