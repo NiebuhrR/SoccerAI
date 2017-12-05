@@ -325,7 +325,7 @@ I don't move towards the ball that often, but rather take whatever route necessa
  // if northeast is not empty, just go north
  if direct_to_ball == NORTH {
  if Look(NORTHEAST) == EMPTY {
- return NORTHEAST
+ return NORTHEAST;
  }
  return NORTH;
  }
