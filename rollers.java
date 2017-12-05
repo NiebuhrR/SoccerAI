@@ -174,11 +174,11 @@ public class rollers extends Player {
       /* Whoever has the ball gets to be the leader */
       for ( i = 0; i < 4; i++) {
 	    if (balld[i] < balld[newl])
-	    newl = i;
-	    if (ball[i] == 1) {  // if the player's distance to the ball is less than everyon else's and has ball
-          Regroup(i); // give a new role for each position
-          i = 5;
-        }
+            newl = i;
+            if (ball[i] == 1) {  // if the player's distance to the ball is less than everyon else's and has ball
+              Regroup(i); // give a new role for each position
+              i = 5;
+            }
           }
       if (i == 4) /* No one was on the ball, pick the closest guy */
         Regroup(newl);
