@@ -59,7 +59,7 @@ public class TeamQGK extends Player {
 
         //checks for the role of player 1
         switch (roles[0]) {
-            case LEAD: action =  Lead();
+            case LEAD: action =  defensive();
                 break;
             case SUPPORT: action =  defensive();
                 break;
@@ -78,7 +78,7 @@ public class TeamQGK extends Player {
         have_ball[1] = HaveBall(1);
 
         switch (roles[1]) {
-            case LEAD: action =  Lead();
+            case LEAD: action =  defensive();
                 break;
             case SUPPORT: action =  defensive();
                 break;
@@ -97,7 +97,7 @@ public class TeamQGK extends Player {
         have_ball[2] = HaveBall(2);
 
         switch (roles[2]) {
-            case LEAD: action =  Lead();
+            case LEAD: action =  defensive();
                 break;
             case SUPPORT: action =  defensive();
                 break;
@@ -116,7 +116,7 @@ public class TeamQGK extends Player {
 
 
         switch (roles[3]) {
-            case LEAD: action =  Lead();
+            case LEAD: action =  defensive();
                 break;
             case SUPPORT: action =  defensive();
                 break;
@@ -155,7 +155,7 @@ public class TeamQGK extends Player {
 //                    break;
 //                }
 //            }
-            if(direct_to_ball[i] < direct_to_ball[newLead]){
+            if(dist_to_ball[i] < dist_to_ball[newLead]){
                 newLead = i;
             }
         }
@@ -254,27 +254,87 @@ public class TeamQGK extends Player {
             return NORTH;
         }
 
-        return ballDir;
+        //START OFFENSE
+
+        // If ball is North East
+        else if(Look(NORTHEAST) == BALL){
+            if(Look(EAST) == EMPTY){
+                return EAST;
+            }
+            else{
+                if(Look(NORTH) == EMPTY){
+                    return NORTH;
+                }
+
+                return SOUTHEAST;
+
+            }
+        }
+
+        //if ball is in East
+        else if(Look(EAST) == BALL){
+            if(Look(SOUTHEAST) == EMPTY){
+                return SOUTHEAST;
+            }
+            else if( Look(NORTHEAST) == EMPTY){
+                return NORTHEAST;
+            }
+            else {
+                if(Look(SOUTH) == EMPTY) {
+                    return SOUTH;
+                }
+
+                return WEST;
+
+            }
+        }
+
+        // if ball in Sout East
+        else if(Look(SOUTHEAST) == BALL){
+            if(Look(EAST) == EMPTY){
+                return EAST;
+            }
+            else if(Look(SOUTH) == EMPTY){
+                return SOUTH;
+            }
+            else {
+                if(Look(NORTH) == EMPTY){
+                    return NORTH;
+                }
+                return SOUTHWEST;
+            }
+        }
+
+        // ball in South East
+        else if(Look(SOUTHEAST) == BALL){
+            return SOUTHEAST;
+        }
+
+        // ball in East
+        else if(Look(EAST) == EMPTY){
+            return EAST;
+        }
+
+        else if(Look(SOUTHWEST) == BALL || Look(WEST) == BALL || Look(NORTHWEST) == BALL){
+            return KICK;
+        }
+
+        else{
+            if(Look(SOUTHWEST) == EMPTY){
+                return SOUTHWEST;
+            }
+            return WEST;
+        }
+
+        //return ballDir;
 
     }
 
     // WHAT EACH ROLES DO:
     public int Lead () {
-        if(Look(NORTHEAST) == BALL){
-            if(Look(EAST) == EMPTY){
-                return EAST;
-            }
-            else if(Look(NORTH) == EMPTY){
-                return NORTH;
-            }
-            return SOUTHEAST;
-        }
 
+        return (GetBallDirection());
 
-
-
-
-        return(GetBallDirection());
     }
 
     public int Support () {
