@@ -322,26 +322,38 @@ public class TeamQGK extends Player {
         // get the y_coordiate of the player
         int player_y = GetLocation().y;
 
-        
+        // if there is a ball in the north direction
         if(Look(NORTH) == BALL){
+            
+            // if there is an opponent in the west or northwest where it can catch up with the ball
             if(Look(WEST) == OPPONENT || Look(NORTHWEST) == OPPONENT) {
+                
+                // if the player is low enough on the field, then kick the ball up
                 if(player_y > 5){
                     return KICK;
                 }
+                
+                // if the player is not low enough on the field, then nudge the ball up north
                 return NORTH;
             }
-            // if the closest oppenent's distance is less than 3
+            
+            // if the closest oppenent's distance is less than 3 (opponents are generally farawar)
+            // then just go north, if not go northeast
             else if(GetOpponentDistance(1) < 3){
                 return NORTH;
             }
             return NORTHEAST;
         }
 
-        // If ball is North East
+        // if there is a ball in the northeast direction
         else if(Look(NORTHEAST) == BALL){
+            
+            // if there is nothing in the east adjacent cell, then go east
             if(Look(EAST) == EMPTY){
                 return EAST;
             }
+            // if not, then if there is nothing in the north adjacent cell, then go north
+            // else go southeast 
             else{
                 if(Look(NORTH) == EMPTY){
                     return NORTH;
