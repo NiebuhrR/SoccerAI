@@ -13,6 +13,7 @@ public class TeamQGK extends Player {
     // two states stored as int, 1 for LEAD, 2 for SUPPORT
     static final int LEAD = 1;
     static final int SUPPORT = 2;
+    static final int REAR = 3;
 
     static int player_x[];       // keeps track of the x coord of each player
     static int player_y[];       // keeps track of the y coord of each player
@@ -76,6 +77,8 @@ public class TeamQGK extends Player {
                 break;
             case SUPPORT: action =  Defensive();
                 break;
+            case REAR: action = Rear();
+                break;
         }
         
         return action;
@@ -100,6 +103,8 @@ public class TeamQGK extends Player {
             case LEAD: action =  Defensive();
                 break;
             case SUPPORT: action =  Defensive();
+                break;
+            case REAR: action = Rear();
                 break;
         }
         
@@ -126,6 +131,8 @@ public class TeamQGK extends Player {
                 break;
             case SUPPORT: action =  Defensive();
                 break;
+            case REAR: action = Rear();
+                break;
         }
         
         return action;
@@ -150,6 +157,8 @@ public class TeamQGK extends Player {
             case LEAD: action =  Lead();
                 break;
             case SUPPORT: action =  Defensive();
+                break;
+            case REAR: action = Rear();
                 break;
         }
         
@@ -217,16 +226,33 @@ public class TeamQGK extends Player {
             roles[newLead] = SUPPORT;
         }
 
+        int maxIndex = 0;
         for(int i = 0; i < 4; i++){
+            if(dist_to_ball[i] > dist_to_ball[maxIndex]){
+                maxIndex = i;
+            }
+
             // if role unassigned, players are automatically supporters
             if(roles[i] == 0){
                 roles[i] = SUPPORT;
             }
         }
+        if(have_ball[newLead] == 1){
+            roles[maxIndex] = REAR;
+        }
 
     } // end Regroup
 
     /////////////////////////////////////////////////////////////////////////
+
+    public int Rear(){
+        //want to maintain certain distance to ball
+        if(GetBallDistance() > 5){
+            System.out.println("YES");
+            return GetBallDirection();
+        }
+        return PLAYER;
+    }
 
     // function to establish Defensive behavior
     public int Defensive(){
