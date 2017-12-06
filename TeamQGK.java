@@ -11,6 +11,7 @@ public class TeamQGK extends Player {
 
     static final int LEAD = 1;
     static final int SUPPORT = 2;
+    static final int REAR = 3;
 
 
     static int player_x[]; // keeps track of the x coord of each player
@@ -66,6 +67,8 @@ public class TeamQGK extends Player {
                 break;
             case SUPPORT: action =  defensive();
                 break;
+            case REAR: action = Rear();
+                break;
         }
         return action;
     }
@@ -82,9 +85,11 @@ public class TeamQGK extends Player {
         direct_to_ball[1] = GetBallDirection();
 
         switch (roles[1]) {
-            case LEAD: action =  defensive();
+            case LEAD: action =  Lead();
                 break;
             case SUPPORT: action =  defensive();
+                break;
+            case REAR: action = Rear();
                 break;
         }
         return action;
@@ -106,6 +111,8 @@ public class TeamQGK extends Player {
                 break;
             case SUPPORT: action =  defensive();
                 break;
+            case REAR: action = Rear();
+                break;
         }
         return action;
     }
@@ -126,6 +133,8 @@ public class TeamQGK extends Player {
             case LEAD: action =  Lead();
                 break;
             case SUPPORT: action =  defensive();
+                break;
+            case REAR: action = Rear();
                 break;
         }
         return action;
@@ -185,16 +194,51 @@ public class TeamQGK extends Player {
             roles[newLead] = SUPPORT;
         }
 
+        int maxIndex = 0;
         for(int i = 0; i < 4; i++){
+
+            if(dist_to_ball[i] > dist_to_ball[maxIndex]){
+                maxIndex = i;
+            }
             //if role unassigned
             if(roles[i] == 0){
                 roles[i] = SUPPORT;
             }
         }
+        //if(have_ball[newLead] != 1){
+            roles[maxIndex] = REAR;
+        //}
 
     }
 
     /////////////////////////////////////////////////////////////////////////
+    public int Rear(){
+
+        int numOpponentsAbove = 0;
+        for(int i = 0; i < 4; i++){
+            int opponentDirection = GetOpponentDirection(i);
+            if(opponentDirection == NORTH || opponentDirection == NORTHWEST){
+                numOpponentsAbove++;
+            }
+            else if(opponentDirection == SOUTH || opponentDirection == SOUTHWEST){
+                numOpponentsAbove--;
+            }
+        }
+
+        if(GetBallDistance() > 7) {
+            return defensive();
+        }
+
+        else if(numOpponentsAbove > 1){
+            return SOUTH;
+        }
+        else if(numOpponentsAbove < -1 ){
+            return NORTH;
+        }
+
+        return defensive();
+    }
+
 
     public int defensive(){
         int ballDir = GetBallDirection();
