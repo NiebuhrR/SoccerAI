@@ -22,7 +22,6 @@ public class TeamQGK extends Player {
     static int player_look[][];  // keep track of the cells adjacent to the player
     static int have_ball[];      // keep track of whether the player has the ball
 
-
     // initialize the game and the above variables
     public void InitializeGame () {
         
@@ -249,7 +248,7 @@ public class TeamQGK extends Player {
             if(Look(NORTHEAST) == EMPTY){
                 return NORTHEAST;
             }
-            return NORTH;
+            return EAST;
         }
 
         // if the ball is in the east direction, if east is empty, go to east, then northeast
@@ -310,10 +309,13 @@ public class TeamQGK extends Player {
             }
             return NORTH;
         }
+        
+        else {
 
-        // if none of the condition is satisfied, just followed the ball
-        return ballDir;
+            // if none of the condition is satisfied, just followed the ball
+            return ballDir;
 
+        }
     } // end Defensive
 
     // function to establish Lead behavior
