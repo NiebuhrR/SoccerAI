@@ -99,7 +99,7 @@ public class TeamQGK extends Player {
 
         // checks for the role of player 2
         switch (roles[1]) {
-            case LEAD: action =  Defensive();
+            case LEAD: action =  Lead();
                 break;
             case SUPPORT: action =  Defensive();
                 break;
@@ -236,21 +236,46 @@ public class TeamQGK extends Player {
                 roles[i] = SUPPORT;
             }
         }
-        if(have_ball[newLead] == 1){
+        //if(have_ball[newLead] == 1){
             roles[maxIndex] = REAR;
-        }
+        //}
 
     } // end Regroup
 
     /////////////////////////////////////////////////////////////////////////
 
     public int Rear(){
-        //want to maintain certain distance to ball
+        /*//want to maintain certain distance to ball
         if(GetBallDistance() > 5){
             System.out.println("YES");
             return GetBallDirection();
         }
-        return PLAYER;
+        return PLAYER;*/
+        
+        int numOpponentsAbove = 0;
+        for(int i = 0; i < 4; i++){
+            int opponentDirection = GetOpponentDirection(i);
+            if(opponentDirection == NORTH || opponentDirection == NORTHWEST){
+                numOpponentsAbove++;
+            }
+            else if(opponentDirection == SOUTH || opponentDirection == SOUTHWEST){
+                numOpponentsAbove--;
+            }
+        }
+        
+        if(GetBallDistance() > 7) {
+            return Defensive();
+        }
+        
+        else if(numOpponentsAbove > 1){
+            return SOUTH;
+        }
+        else if(numOpponentsAbove < -1 ){
+            return NORTH;
+        }
+        
+        return Defensive();
+        
     }
 
     // function to establish Defensive behavior
@@ -317,11 +342,11 @@ public class TeamQGK extends Player {
         // then go to northwest; if northwest is also blocked, then go to southwest; otherwise just go west
         else if (ballDir == WEST) {
             if(Look(WEST) == TEAMMATE){
-                if(Look(NORTHWEST) == EMPTY){
-                    return NORTHWEST;
+                if(Look(NORTH) == EMPTY){
+                    return NORTH;
                 }
-                else if(Look(SOUTHWEST) == EMPTY){
-                    return SOUTHWEST;
+                else if(Look(SOUTH) == EMPTY){
+                    return SOUTH;
                 }
             }
             return WEST;
@@ -352,7 +377,7 @@ public class TeamQGK extends Player {
         if (Look(NORTH) == BALL) {
             
             // if the opponent are generally faraway
-            if (GetOpponentDistance(1) > 3) {
+            if (GetOpponentDistance(1) > 4) {
                 
                 // if adjacent southeast cell is empty, go southeast
                 if (Look(NORTHEAST) == EMPTY) {
@@ -366,7 +391,7 @@ public class TeamQGK extends Player {
             // no supporter in the southeast direction
             else if (Look(NORTHWEST) == OPPONENT || Look(WEST) == OPPONENT &&
                      Look(NORTHEAST) == TEAMMATE) {
-                if (player_y < 30) {
+                if (player_y > 5) {
                     return KICK;
                 } else {
                     return NORTHEAST;
@@ -392,29 +417,6 @@ public class TeamQGK extends Player {
                 }
             }
         }
-        
-        /*// if there is a ball in the north direction
-        if(Look(NORTH) == BALL){
-            
-            // if there is an opponent in the west or northwest where it can catch up with the ball
-            if(Look(WEST) == OPPONENT || Look(NORTHWEST) == OPPONENT) {
-                
-                // if the player is low enough on the field, then kick the ball up
-                if(player_y > 5){
-                    return KICK;
-                }
-                
-                // if the player is not low enough on the field, then nudge the ball up north
-                return NORTH;
-            }
-            
-            // if the closest oppenent's distance is less than 3 (opponents are generally farawar)
-            // then just go north, if not go northeast
-            else if(GetOpponentDistance(1) < 3){
-                return NORTH;
-            }
-            return NORTHEAST;
-        }*/
 
         // if there is a ball in the northeast direction
         else if(Look(NORTHEAST) == BALL){
@@ -485,7 +487,7 @@ public class TeamQGK extends Player {
         else if (Look(SOUTH) == BALL) {
             
             // if the opponent are generally faraway
-            if (GetOpponentDistance(1) > 3) {
+            if (GetOpponentDistance(1) > 4) {
                 
                 // if adjacent southeast cell is empty, go southeast
                 if (Look(SOUTHEAST) == EMPTY) {
@@ -499,7 +501,7 @@ public class TeamQGK extends Player {
             // no supporter in the southeast direction
             else if (Look(SOUTHWEST) == OPPONENT || Look(WEST) == OPPONENT &&
                      Look(SOUTHEAST) == TEAMMATE) {
-                if (player_y < 30) {
+                if (player_y < 28) {
                     return KICK;
                 } else {
                     return SOUTHEAST;
@@ -525,28 +527,6 @@ public class TeamQGK extends Player {
                 }
             }
         }
-        
-        /*// if there is a ball in the south direction
-        else if(Look(SOUTH) == BALL){
-            
-            // if there is an opponent either in the west or southwest direction
-            if(Look(WEST) == OPPONENT || Look(SOUTHWEST) == OPPONENT){
-                
-                // if the leader is generally high enought on the field, then kick the
-                // ball downward
-                if (player_y < 30){
-                    return KICK;
-                }
-                return SOUTH;
-            }
-
-            // if the nearest opponent is 3 cells away (generally opponents are faraway
-            // then nudge the ball down south, otherwise go southeast
-            else if(GetOpponentDistance(1) < 3){
-                return SOUTH;
-            }
-            return SOUTHEAST;
-        }*/
 
         // if there is a ball in the southwest direction, kick
         else if(Look(SOUTHWEST) == BALL){
