@@ -353,43 +353,53 @@ public class TeamQGK extends Player {
                 return EAST;
             }
             // if not, then if there is nothing in the north adjacent cell, then go north
-            // else go southeast 
+            // else go southeast
             else{
                 if(Look(NORTH) == EMPTY){
                     return NORTH;
                 }
-
                 return SOUTHEAST;
 
             }
         }
 
-        //if ball is in East
+        // if there is a ball in the east direction
         else if(Look(EAST) == BALL){
+            
+            // if there is nothing in the southeast adjacent cell, then go southeast
             if(Look(SOUTHEAST) == EMPTY){
                 return SOUTHEAST;
             }
-            else if( Look(NORTHEAST) == EMPTY){
+            // if there is nothing in the northeast adjacent cell, then go northeast
+            else if(Look(NORTHEAST) == EMPTY){
                 return NORTHEAST;
             }
+            // if there is nothing in the south adjacent cell, then go south
+            // otherwise go west
             else {
                 if(Look(SOUTH) == EMPTY) {
                     return SOUTH;
                 }
-
                 return WEST;
 
             }
         }
 
-        // if ball in Sout East
+        // if there is a ball in the southeast direction
         else if(Look(SOUTHEAST) == BALL){
+            
+            // if there is nothing in the east adjacent cell, then go east
             if(Look(EAST) == EMPTY){
                 return EAST;
             }
+            
+            // if there is nothing in the south adjacent cell, then go south
             else if(Look(SOUTH) == EMPTY){
                 return SOUTH;
             }
+            
+            // if there is nothing in the north adjacent cell, then go north
+            // otherwise go southwest
             else {
                 if(Look(NORTH) == EMPTY){
                     return NORTH;
@@ -398,37 +408,49 @@ public class TeamQGK extends Player {
             }
         }
 
+        // if there is a ball in the south direction
         else if(Look(SOUTH) == BALL){
+            
+            // if there is an opponent either in the west or southwest direction
             if(Look(WEST) == OPPONENT || Look(SOUTHWEST) == OPPONENT){
+                
+                // if the leader is generally high enought on the field, then kick the
+                // ball downward
                 if(player_y < 30){
                     return KICK;
                 }
                 return SOUTH;
             }
 
+            // if the nearest opponent is 3 cells away (generally opponents are faraway
+            // then nudge the ball down south, otherwise go southeast
             else  if(GetOpponentDistance(1) < 3){
                 return SOUTH;
             }
             return SOUTHEAST;
         }
 
+        // if there is a ball in the southwest direction, kick
         else if(Look(SOUTHWEST) == BALL){
             return KICK;
         }
+        
+        // if there is a ball in the west direction, kick
         else if(Look(WEST) == BALL){
             return  KICK;
         }
+        
+        // if there is a ball in the southwest direction, kick
         else if(Look(NORTHWEST) == BALL){
             return KICK;
         }
+        
+        // otherwise follow the ball
         else {
             return GetBallDirection();
         }
 
-
-
-
-    }
+    } // end Lead
 
     public int getAction() {
         switch(ID)
@@ -443,9 +465,7 @@ public class TeamQGK extends Player {
                 return Player4();
         }
         return BALL;
-    }
-
-    // team doesn't have ball
+    } // end getAction
 
 }
 
