@@ -7,23 +7,25 @@ public class TeamQGK extends Player {
     static final int CONTROL_TIME = 13;
     static final int WINGSPAN = 8;
 
+    // initialize haveBall to 0
     static int haveBall = 0;
 
+    // two states stored as int, 1 for LEAD, 2 for SUPPORT
     static final int LEAD = 1;
     static final int SUPPORT = 2;
 
+    static int player_x[];       // keeps track of the x coord of each player
+    static int player_y[];       // keeps track of the y coord of each player
+    static int roles[];          // keep track of each player's role
+    static int dist_to_ball[];   // keep track of distance from player to ball
+    static int direct_to_ball[]; // keep track of direction from player to ball
+    static int player_look[][];  // keep track of the cells adjacent to the player
+    static int have_ball[];      // keep track of whether the player has the ball
 
-    static int player_x[]; // keeps track of the x coord of each player
-    static int player_y[]; // keeps track of the y coord of each player
-    static int roles[];
-    static int dist_to_ball[];
-    static int direct_to_ball[];
-    static int player_look[][];
-    static int have_ball[];
 
-
-    //initialize game
+    // initialize the game and the above variables
     public void InitializeGame () {
+        
         player_x = new int[4];
         player_y = new int[4];
         roles = new int[4];
@@ -32,110 +34,134 @@ public class TeamQGK extends Player {
         player_look = new int[4][8];
         have_ball = new int[4];
 
-    }
+    } // end InitializeGame
 
+    // intialize the points
     public void InitializePoint () {
 
+        // initialize every player's position to (0,0)
         for (int i = 0; i < 4; i++) {
             player_x[i] = 0;
             player_y[i] = 0;
 
         }
+        
+        // intialize every player's role
         roles[0] = LEAD;
         roles[1] = SUPPORT;
         roles[2] = SUPPORT;
         roles[3] = SUPPORT;
-    }
+    
+    } // end InitializePoint
 
+    // function for player1
     public int Player1() {
 
+        // initialize the initial action to WEST
         int action = WEST;
 
+        // call the behave function to find each player's role
         Behave();
 
-        // My IFO
+        // get position, distance to ball, have ball, and direction to ball for player 1
         player_x[0] = GetLocation().x;
         player_y[0] = GetLocation().y;
         dist_to_ball[0] = GetBallDistance();
         have_ball[0] = HaveBall(0);
         direct_to_ball[0] = GetBallDirection();
 
-        //checks for the role of player 1
+        // checks for the role of player 1
         switch (roles[0]) {
             case LEAD: action =  Lead();
                 break;
             case SUPPORT: action =  defensive();
                 break;
         }
+        
         return action;
-    }
+    
+    } // end Player1()
 
+    // function for player2
     public int Player2() {
 
+        // initialize the initial action to WEST
         int action = WEST;
 
-        //MY INFO
+        // get position, distance to ball, have ball, and direction to ball for player 1
         player_x[1] = GetLocation().x;
         player_y[1] = GetLocation().y;
         dist_to_ball[1] = GetBallDistance();
         have_ball[1] = HaveBall(1);
         direct_to_ball[1] = GetBallDirection();
 
+        // checks for the role of player 2
         switch (roles[1]) {
             case LEAD: action =  defensive();
                 break;
             case SUPPORT: action =  defensive();
                 break;
         }
+        
         return action;
-    }
+    
+    } // end Player2()
 
+    // function for player3
     public int Player3() {
 
+        // initialize the initial action to WEST
         int action = WEST;
 
-        //MY INFO
+        // get position, distance to ball, have ball, and direction to ball for player 1
         player_x[2] = GetLocation().x;
         player_y[2] = GetLocation().y;
         dist_to_ball[2] = GetBallDistance();
         have_ball[2] = HaveBall(2);
         direct_to_ball[2] = GetBallDirection();
 
+        // checks for the role of player 3
         switch (roles[2]) {
             case LEAD: action =  Lead();
                 break;
             case SUPPORT: action =  defensive();
                 break;
         }
+        
         return action;
-    }
 
+    } // end Player3()
+
+    // function for player4
     public int Player4() {
+        
+        // initialize the initial action to WEST
         int action = WEST;
 
-        //MY INFO
+        // get position, distance to ball, have ball, and direction to ball for player 1
         player_x[3] = GetLocation().x;
         player_y[3] = GetLocation().y;
         dist_to_ball[3] = GetBallDistance();
         have_ball[3] = HaveBall(3);
-
         direct_to_ball[3] = GetBallDirection();
 
-
+        // checks for the role of player 4
         switch (roles[3]) {
             case LEAD: action =  Lead();
                 break;
             case SUPPORT: action =  defensive();
                 break;
         }
+        
         return action;
-    }
+
+    } // end Player4()
 
     public void WonPoint () {};
     public void LostPoint () {};
     public void GameOver () {};
 
-    // checks if the player has the ball (I think same code from ZombiePlus)
+    // checks if the player has the ball
     public int HaveBall(int id) {
         int BallDir = GetBallDirection();
         if ((GetBallDistance() == 1) &&
@@ -146,38 +172,44 @@ public class TeamQGK extends Player {
             return 1;
         }
         return 0;
-    }
+    } // end HaveBall
 
-    // Takes care of switching the roles for each player depending on their distance to the ball
+    // takes care of switching the roles for each player depending on their distance to the ball
     public void Behave () {
+        
+        // initialize newLead to 0
         int newLead = 0;
 
-
+        // loop over all the player
         for(int i = 0; i < 4 ; i++){
-            if(dist_to_ball[i] == 1) { //1 is not the final number here
-
-                // want to prioritize NE and SE players to be lead
+            // if distance from the player to ball is 1
+            if(dist_to_ball[i] == 1) {
+                // prioritize players who are adjacent to the ball and in the NE or SE directions as leader
                 if(direct_to_ball[i] == NORTHEAST || direct_to_ball[i] == SOUTHEAST){
                     newLead = i;
                     break;
                 }
             }
+            // else choose leader as the closest player to ball
             else if(dist_to_ball[i] < dist_to_ball[newLead]){
                 newLead = i;
-            }
+           }
         }
+        
+        // call regroup, which assign the proper role to each player
         Regroup(newLead);
 
-    }
+    } // end Behave
 
-    // reassigns roles
+    // function to reassign the role now that their indices are known
     public void Regroup (int newLead) {
-        //initialize roles --> all unassigned
+        
+        // initialize all roles to 0; this means that if roles[i] == 0, it is unassigned
         for(int i = 0; i < 4; i++){
             roles[i] = 0;
         }
 
-        //set new leader
+        // set the new leader to player with index newLead
         if(have_ball[newLead] == 1){
             roles[newLead] = LEAD;
         }
@@ -186,17 +218,20 @@ public class TeamQGK extends Player {
         }
 
         for(int i = 0; i < 4; i++){
-            //if role unassigned
+            // if role unassigned, players are automatically supporters
             if(roles[i] == 0){
                 roles[i] = SUPPORT;
             }
         }
 
-    }
+    } // end Regroup
 
     /////////////////////////////////////////////////////////////////////////
 
+    // function to establish defensive behavior
     public int defensive(){
+        
+        // get the direction to ball
         int ballDir = GetBallDirection();
 
         // if the ball is in the north direction, if northeast is empty, go to northeast, then north
@@ -236,8 +271,7 @@ public class TeamQGK extends Player {
         }
 
         // if the ball is in the south direction, if southeast is empty, go southeast, then east
-        // if southeast is not empty, just go east  --> this is a little wonky, but i want the new
-        // condition becomes southwest...
+        // if southeast is not empty, just go east
         else if (ballDir == SOUTH) {
             if (Look(SOUTHEAST) == EMPTY) {
                 return SOUTHEAST;
@@ -247,14 +281,15 @@ public class TeamQGK extends Player {
 
         // if the ball is in the southwest direction, if southeast is empty, go southeast, then south
         // if southeast is not empty, then just go south --> the point is to get behind the ball
-        else if (ballDir== SOUTHWEST) {
+        else if (ballDir == SOUTHWEST) {
             if (Look(SOUTHEAST) == EMPTY) {
                 return SOUTHEAST;
             }
             return SOUTH;
         }
 
-        // if the ball is in the west direction, just go west
+        // if the ball is in the west direction, and if there is a teammate in the west direction,
+        // then go to northwest; if northwest is also blocked, then go to southwest; otherwise just go west
         else if (ballDir == WEST) {
             if(Look(WEST) == TEAMMATE){
                 if(Look(NORTHWEST) == EMPTY){
@@ -266,23 +301,28 @@ public class TeamQGK extends Player {
             }
             return WEST;
         }
-
+        
+        // if the ball is in the northwest direction, and if northeast is empty, go to northeast, then north
+        // if northeast is not empty, just go north
         else if (ballDir == NORTHWEST) {
             if (Look(NORTHEAST) == EMPTY) {
-                return NORTH;
+                return NORTHEAST;
             }
             return NORTH;
         }
 
-
+        // if none of the condition is satisfied, just followed the ball
         return ballDir;
 
-    }
+    } // end defensive
 
-    // WHAT EACH ROLES DO:
+    // function to establish Lead behavior
     public int Lead () {
+        
+        // get the y_coordiate of the player
         int player_y = GetLocation().y;
 
+        
         if(Look(NORTH) == BALL){
             if(Look(WEST) == OPPONENT || Look(NORTHWEST) == OPPONENT) {
                 if(player_y > 5){
