@@ -28,7 +28,7 @@ public class TeamQGK extends Player {
         player_y = new int[4];
         roles = new int[4];
         dist_to_ball = new int[4];
-        direct_to_ball = new int[8];
+        direct_to_ball = new int[4];
         player_look = new int[4][8];
         have_ball = new int[4];
 
@@ -58,6 +58,7 @@ public class TeamQGK extends Player {
         player_y[0] = GetLocation().y;
         dist_to_ball[0] = GetBallDistance();
         have_ball[0] = HaveBall(0);
+        direct_to_ball[0] = GetBallDirection();
 
         //checks for the role of player 1
         switch (roles[0]) {
@@ -78,6 +79,7 @@ public class TeamQGK extends Player {
         player_y[1] = GetLocation().y;
         dist_to_ball[1] = GetBallDistance();
         have_ball[1] = HaveBall(1);
+        direct_to_ball[1] = GetBallDirection();
 
         switch (roles[1]) {
             case LEAD: action =  defensive();
@@ -97,6 +99,7 @@ public class TeamQGK extends Player {
         player_y[2] = GetLocation().y;
         dist_to_ball[2] = GetBallDistance();
         have_ball[2] = HaveBall(2);
+        direct_to_ball[2] = GetBallDirection();
 
         switch (roles[2]) {
             case LEAD: action =  Lead();
@@ -115,6 +118,8 @@ public class TeamQGK extends Player {
         player_y[3] = GetLocation().y;
         dist_to_ball[3] = GetBallDistance();
         have_ball[3] = HaveBall(3);
+
+        direct_to_ball[3] = GetBallDirection();
 
 
         switch (roles[3]) {
@@ -174,7 +179,6 @@ public class TeamQGK extends Player {
 
         //set new leader
         if(have_ball[newLead] == 1){
-            System.out.println("YES");
             roles[newLead] = LEAD;
         }
         else {
@@ -194,8 +198,6 @@ public class TeamQGK extends Player {
 
     public int defensive(){
         int ballDir = GetBallDirection();
-
-
 
         // if the ball is in the north direction, if northeast is empty, go to northeast, then north
         // if northeast is not empty, just go north
@@ -254,6 +256,14 @@ public class TeamQGK extends Player {
 
         // if the ball is in the west direction, just go west
         else if (ballDir == WEST) {
+            if(Look(WEST) == TEAMMATE){
+                if(Look(NORTHWEST) == EMPTY){
+                    return NORTHWEST;
+                }
+                else if(Look(SOUTHWEST) == EMPTY){
+                    return SOUTHWEST;
+                }
+            }
             return WEST;
         }
 
@@ -367,12 +377,6 @@ public class TeamQGK extends Player {
 
 
     }
-
-    public int Support () {
-
-        return(GetBallDirection());
-    }
-
 
     public int getAction() {
         switch(ID)
