@@ -15,6 +15,7 @@ public class LlamasWithHats extends Player {
     static final int SUPPORT = 2;
     static final int REAR = 3;
 
+
     static int player_x[];       // keeps track of the x coord of each player
     static int player_y[];       // keeps track of the y coord of each player
     static int roles[];          // keep track of each player's role
@@ -226,8 +227,11 @@ public class LlamasWithHats extends Player {
         }
 
         int maxIndex = 0;
+        int rear2Index = 0;
         for(int i = 0; i < 4; i++){
-            if(dist_to_ball[i] > dist_to_ball[maxIndex]){
+            rear2Index = i;
+            if(dist_to_ball[rear2Index] > dist_to_ball[maxIndex]){
+                rear2Index = maxIndex;
                 maxIndex = i;
             }
 
@@ -236,54 +240,69 @@ public class LlamasWithHats extends Player {
                 roles[i] = SUPPORT;
             }
         }
-        //if(have_ball[newLead] == 1){
-            roles[maxIndex] = REAR;
-        //}
+
+        // furthest away from ball becomes rear
+        roles[maxIndex] = REAR;
+
 
     } // end Regroup
 
     /////////////////////////////////////////////////////////////////////////
 
     public int Rear(){
-        /*//want to maintain certain distance to ball
-        if(GetBallDistance() > 5){
-            System.out.println("YES");
-            return GetBallDirection();
-        }
-        return PLAYER;*/
-        
-        int numOpponentsAbove = 0;
-        
-        for(int i = 0; i < 4; i++){
-            int opponentDirection = GetOpponentDirection(i);
-            if(opponentDirection == NORTH || opponentDirection == NORTHWEST){
-                numOpponentsAbove++;
-            }
-            else if(opponentDirection == SOUTH || opponentDirection == SOUTHWEST){
-                numOpponentsAbove--;
-            }
-        }
-        
-        if(GetBallDistance() > 8) {
-            return Defensive();
-        }
-        
-        else if(numOpponentsAbove > 1){
+
+
+        int ballDir = GetBallDirection();
+        int player_y = GetLocation().y;
+
+
+        if(player_y < 5){
             return SOUTH;
         }
-        else if(numOpponentsAbove < -1 ){
+        else if(player_y > 75){
             return NORTH;
         }
-        
-        return Defensive();
-        
+        else if(GetBallDistance() > 8) {
+            return Defensive();
+        }
+        else{
+
+
+            int numOpponentsAbove = 0;
+            for(int i = 0; i < 4; i++){
+                int opponentDirection = GetOpponentDirection(i);
+                if(opponentDirection == NORTH || opponentDirection == NORTHWEST){
+                    numOpponentsAbove++;
+                }
+                else if(opponentDirection == SOUTH || opponentDirection == SOUTHWEST){
+                    numOpponentsAbove--;
+                }
+            }
+            if(numOpponentsAbove > 1){
+                return SOUTH;
+            }
+            else if(numOpponentsAbove < -1){
+                return NORTH;
+            }
+            else if(numOpponentsAbove == 0) {
+                return Defensive();
+            }
+            return ballDir;
+        }
+
     }
+
 
     // function to establish Defensive behavior
     public int Defensive(){
         
         // get the direction to ball
         int ballDir = GetBallDirection();
+
+        int player_x = GetLocation().x;
+        if(player_x < 9 && (ballDir == NORTHWEST || ballDir == WEST || ballDir == SOUTHWEST)){
+            return KICK;
+        }
 
         // if the ball is in the north direction, if northeast is empty, go to northeast, then north
         // if northeast is not empty, just go north
@@ -370,6 +389,8 @@ public class LlamasWithHats extends Player {
 
     // function to establish Lead behavior
     public int Lead () {
+
+        int ballDir = GetBallDirection();
         
         // get the y_coordiate of the player
         int player_y = GetLocation().y;
