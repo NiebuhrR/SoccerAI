@@ -74,7 +74,7 @@ public class TeamQGK extends Player {
         switch (roles[0]) {
             case LEAD: action =  Lead();
                 break;
-            case SUPPORT: action =  defensive();
+            case SUPPORT: action =  Defensive();
                 break;
         }
         
@@ -97,9 +97,9 @@ public class TeamQGK extends Player {
 
         // checks for the role of player 2
         switch (roles[1]) {
-            case LEAD: action =  defensive();
+            case LEAD: action =  Defensive();
                 break;
-            case SUPPORT: action =  defensive();
+            case SUPPORT: action =  Defensive();
                 break;
         }
         
@@ -124,7 +124,7 @@ public class TeamQGK extends Player {
         switch (roles[2]) {
             case LEAD: action =  Lead();
                 break;
-            case SUPPORT: action =  defensive();
+            case SUPPORT: action =  Defensive();
                 break;
         }
         
@@ -149,7 +149,7 @@ public class TeamQGK extends Player {
         switch (roles[3]) {
             case LEAD: action =  Lead();
                 break;
-            case SUPPORT: action =  defensive();
+            case SUPPORT: action =  Defensive();
                 break;
         }
         
@@ -228,8 +228,8 @@ public class TeamQGK extends Player {
 
     /////////////////////////////////////////////////////////////////////////
 
-    // function to establish defensive behavior
-    public int defensive(){
+    // function to establish Defensive behavior
+    public int Defensive(){
         
         // get the direction to ball
         int ballDir = GetBallDirection();
@@ -314,7 +314,7 @@ public class TeamQGK extends Player {
         // if none of the condition is satisfied, just followed the ball
         return ballDir;
 
-    } // end defensive
+    } // end Defensive
 
     // function to establish Lead behavior
     public int Lead () {
