@@ -313,6 +313,8 @@ public class LlamasWithHats extends Player {
             else if(numOpponentsAbove == 0) {
                 return Defensive();
             }
+            
+            // else just follow the ball's direction
             return ballDir;
         }
 
