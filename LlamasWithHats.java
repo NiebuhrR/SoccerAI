@@ -251,39 +251,65 @@ public class LlamasWithHats extends Player {
 
     public int Rear(){
 
-
+        // get the direction of the ball
         int ballDir = GetBallDirection();
+        
+        // get the y coordinate of the player
         int player_y = GetLocation().y;
 
-
+        // if y coordinate of player is less that 5
+        // move south
         if(player_y < 5){
             return SOUTH;
         }
+        
+        // if y coordinate of player is more than 75
+        // move north
         else if(player_y > 75){
             return NORTH;
         }
+        
+        // if the distance to ball is more than 8
+        // act like a defensive player
         else if(GetBallDistance() > 8) {
             return Defensive();
         }
+        
+        // if none of the condition is satisfied
         else{
-
-
+            
+            // initialize the number of opponents above the player to 0
             int numOpponentsAbove = 0;
+            
             for(int i = 0; i < 4; i++){
+                
+                // get the opponent direction
                 int opponentDirection = GetOpponentDirection(i);
+                
+                // if the opponent is in the north or northwest direction
                 if(opponentDirection == NORTH || opponentDirection == NORTHWEST){
+                    // increment the number of opponents above player
                     numOpponentsAbove++;
                 }
+                
+                // if the opponent is in the south or southwest directoion
                 else if(opponentDirection == SOUTH || opponentDirection == SOUTHWEST){
+                    // decrement the number of opponents below player
                     numOpponentsAbove--;
                 }
             }
+            
+            // if there are more opponents above than below, go north
             if(numOpponentsAbove > 1){
                 return SOUTH;
             }
+            
+            // if there are more opponents below than above, go north
             else if(numOpponentsAbove < -1){
                 return NORTH;
             }
+            
+            // if there is an equal number of players above and below
             else if(numOpponentsAbove == 0) {
                 return Defensive();
             }
@@ -523,7 +549,7 @@ public class LlamasWithHats extends Player {
             // no supporter in the southeast direction
             else if (Look(SOUTHWEST) == OPPONENT || Look(WEST) == OPPONENT &&
                      Look(SOUTHEAST) == TEAMMATE) {
-                if (player_y < 28) {
+                if (player_y < 29) {
                     return KICK;
                 } else {
                     return SOUTHEAST;
