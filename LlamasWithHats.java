@@ -14,8 +14,6 @@ public class LlamasWithHats extends Player {
     static final int LEAD = 1;
     static final int SUPPORT = 2;
     static final int REAR = 3;
-    static final int NORTHWING = 4;
-
 
     static int player_x[];       // keeps track of the x coord of each player
     static int player_y[];       // keeps track of the y coord of each player
@@ -78,8 +76,6 @@ public class LlamasWithHats extends Player {
                 break;
             case SUPPORT: action = Defensive();
                 break;
-            case NORTHWING: action = NorthWing();
-                break;
             case REAR: action = Rear();
                 break;
         }
@@ -106,8 +102,6 @@ public class LlamasWithHats extends Player {
             case LEAD: action =  Lead();
                 break;
             case SUPPORT: action =  Defensive();
-                break;
-            case NORTHWING: action = NorthWing();
                 break;
             case REAR: action = Rear();
                 break;
@@ -136,8 +130,6 @@ public class LlamasWithHats extends Player {
                 break;
             case SUPPORT: action =  Defensive();
                 break;
-            case NORTHWING: action = NorthWing();
-                break;
             case REAR: action = Rear();
                 break;
         }
@@ -164,8 +156,6 @@ public class LlamasWithHats extends Player {
             case LEAD: action =  Lead();
                 break;
             case SUPPORT: action =  Defensive();
-                break;
-            case NORTHWING: action = NorthWing();
                 break;
             case REAR: action = Rear();
                 break;
@@ -236,8 +226,6 @@ public class LlamasWithHats extends Player {
         }
         
         int rear = 0;
-        int north = 0;
-        int bottomY = 10000;
         
         for(int i = 0; i < 4; i++){
             if(dist_to_ball[i] > dist_to_ball[rear]){
@@ -246,8 +234,6 @@ public class LlamasWithHats extends Player {
             // if role unassigned, players are automatically supporters
             if(roles[i] == 0){
                 roles[i] = SUPPORT;
-                bottomY = player_y[i];
-                north = i;
             }
         }
         
@@ -262,8 +248,6 @@ public class LlamasWithHats extends Player {
         
         // furthest away from ball becomes rear
         roles[rear] = REAR;
-        roles[north] = NORTHWING;
-        
         
     } // end Regroup
  
@@ -347,21 +331,30 @@ public class LlamasWithHats extends Player {
 
     } // end Rear
     
-    public int NorthWing(){
-        /*int player_y = GetLocation().y;
-        if (player_y > 15 * FieldY() / 16){
-            if (Look(NORTH) == EMPTY) {
-                return NORTH;
-            }
-            else if (Look(NORTHEAST) == EMPTY) {
-                return NORTHEAST;
-            }
-        }*/
-        return Defensive();
-    }
-
     // function to establish Defensive behavior
     public int Defensive(){
+        
+        // initialize the number of opponent above player to 0
+        int numOpponentsAbove = 0;
+        
+        // use for loop to calculate the number of opponent above
+        for (int i = 0; i < 4; i++){
+            
+            // get the opponent direction
+            int opponentDirection = GetOpponentDirection(i);
+            
+            // if the opponent is in the north or northwest direction
+            if (opponentDirection == NORTH || opponentDirection == NORTHWEST){
+                // increment the number of opponents above player
+                numOpponentsAbove++;
+            }
+            
+            // if the opponent is in the south or southwest directoion
+            else if (opponentDirection == SOUTH || opponentDirection == SOUTHWEST){
+                // decrement the number of opponents below player
+                numOpponentsAbove--;
+            }
+        }
         
         // get the direction to ball
         int ballDir = GetBallDirection();
@@ -371,96 +364,196 @@ public class LlamasWithHats extends Player {
         
         // get the x_coordinate of the player
         int player_x = GetLocation().x;
+        int player_y = GetLocation().y;
         
         // if the player is near the goal, and the ball is in the NW, W, SW direction
-        if (player_x < 9 && (ballDir == NORTHWEST || ballDir == WEST || ballDir == SOUTHWEST)
-        && ballDist == 1) {
+        if(player_x < 9 && (ballDir == NORTHWEST || ballDir == WEST || ballDir == SOUTHWEST)
+           && ballDist == 1) {
             return KICK;
         }
-
-        // if the ball is in the north direction, if northeast is empty, go to northeast, then north
-        // if northeast is not empty, just go north
-        else if (ballDir == NORTH){
-            if (Look(NORTHEAST) == EMPTY){
+        
+        // if the ball is in the north direction
+        else if(ballDir == NORTH){
+            // if distance to ball is 1
+            if(ballDist == 1){
+                // if the east cell is empty, go east
+                if(Look(EAST) == EMPTY){
+                    return EAST;
+                }
+                // else if the northeast cell is empty, go northeast
+                else if(Look(NORTHEAST) == EMPTY){
+                    return NORTHEAST;
+                }
+                // else go north
+                return NORTH;
+            }
+            // if distance to ball is 2, go northeast
+            else if(ballDist == 2){
                 return NORTHEAST;
             }
+            // if northeast is empty, go northeast
+            else if(Look(NORTHEAST) == EMPTY){
+                return NORTHEAST;
+            }
+            // if east is empty, go east
+            else if(Look(EAST) == EMPTY){
+                return EAST;
+            }
+            // else go north
             return NORTH;
         }
-
+        
         // if the ball is in the northeast direction, if northeast is empty, go to northeast, then north
         // if northeast is not empty, just go north
-        else if (ballDir == NORTHEAST){
-            if (Look(NORTHEAST) == EMPTY){
+        else if(ballDir == NORTHEAST){
+            // if dist to ball is one, if east is empty go east, else go southeast
+            if(ballDist == 1){
+                if(Look(EAST) == EMPTY){
+                    return EAST;
+                }
+                return SOUTHEAST;
+            }
+            // else if northeast is empty, go northeast
+            else if(Look(NORTHEAST) == EMPTY){
                 return NORTHEAST;
             }
-            return NORTH;
+            // else go east
+            return EAST;
         }
-
+        
         // if the ball is in the east direction, if east is empty, go to east, then northeast
         // if east is not empty, just go northeast
         else if (ballDir == EAST) {
-            if (Look(EAST) == EMPTY) {
+            // if distance to ball is 1, if southeast is empty go southeast, else go northeast
+            if(ballDist == 1){
+                if(Look(SOUTHEAST) == EMPTY){
+                    return SOUTHEAST;
+                }
+                return NORTHEAST;
+            }
+            // if east is empty, go east
+            else if (Look(EAST) == EMPTY) {
                 return EAST;
             }
+            // else go northeast
             return NORTHEAST;
         }
-
+        
         // if the ball is in the southeast direction, if southeast is empty, go southeast, then south
         // if southeast is not empty, just go south
         else if (ballDir == SOUTHEAST) {
-            if (Look(SOUTHEAST) == EMPTY) {
+            // if distance to ball is one, if east is empty go east, else go northeast
+            if(ballDist == 1){
+                if(Look(EAST) == EMPTY){
+                    return EAST;
+                }
+                return NORTHEAST;
+            }
+            // else if southeast is empty, go southeast
+            else if (Look(SOUTHEAST) == EMPTY) {
                 return SOUTHEAST;
             }
-            return SOUTH;
+            // else go east
+            return EAST;
         }
-
+        
         // if the ball is in the south direction, if southeast is empty, go southeast, then east
         // if southeast is not empty, just go east
         else if (ballDir == SOUTH) {
-            if (Look(SOUTHEAST) == EMPTY) {
+            // if distance to ball is one,  if southeast is empty go southeast
+            if(ballDist == 1){
+                if(Look(SOUTHEAST) == EMPTY){
+                    return SOUTHEAST;
+                }
+                // else if east is empty go east
+                else if(Look(EAST) == EMPTY){
+                    return EAST;
+                }
+                // else go south
+                return SOUTH;
+            }
+            // else if distance to ball is 2
+            else if(ballDist == 2){
+                // if southeast is empty go southeast, else go east
+                if(Look(SOUTHEAST) == EMPTY){
+                    return SOUTHEAST;
+                }
+                return EAST;
+            }
+            // else if southeast is empty go southeast
+            else if (Look(SOUTHEAST) == EMPTY) {
                 return SOUTHEAST;
             }
-            return EAST;
+            // else if east is empty go east
+            else if (Look(EAST) == EMPTY){
+                return EAST;
+            }
+            // else go south
+            return SOUTH;
         }
-
+        
         // if the ball is in the southeast direction, if southeast is empty, go southeast, then south
         // if southeast is not empty, then just go south --> the point is to get behind the ball
         else if (ballDir == SOUTHWEST) {
-            if (Look(SOUTH) == EMPTY) {
-                return SOUTH;
+            // if distance to ball is one
+            if(ballDist == 1){
+                // if there is no opponent above, kick, else go southwest
+                if(numOpponentsAbove > 0){
+                    return KICK;
+                }
+                return SOUTHWEST;
             }
-            return SOUTHEAST;
+            // else go south
+            return SOUTH;
         }
-
+        
         // if the ball is in the west direction, and if there is a teammate in the west direction,
         // then go to northwest; if northwest is also blocked, then go to southwest; otherwise just go west
         else if (ballDir == WEST) {
-            if(Look(WEST) == TEAMMATE) {
-                if(Look(NORTH) == EMPTY) {
-                    return NORTH;
+            if(ballDist == 1){
+                if(player_x > 70){
+                    return KICK;
                 }
-                else if(Look(SOUTH) == EMPTY) {
-                    return SOUTH;
+                return WEST;
+            }
+            else if(Look(WEST) == TEAMMATE) {
+                if(Look(NORTHWEST) == EMPTY) {
+                    return NORTHWEST;
+                }
+                else if(Look(SOUTHWEST) == EMPTY) {
+                    return SOUTHWEST;
                 }
             }
             return WEST;
         }
         
-        // if the ball is in the northwest direction, and if northeast is empty, go to northeast, then north
-        // if northeast is not empty, just go north
+        // if the ball is in thr northwest
         else if (ballDir == NORTHWEST) {
-            if (Look(NORTH) == EMPTY) {
+            // if distance to ball is one
+            if(ballDist == 1){
+                // if there is no opponent above, kick
+                if(numOpponentsAbove < 0){
+                    return KICK;
+                }
+                // else go northwest
+                return NORTHWEST;
+            }
+            // else if north is empty, go north
+            else if (Look(NORTH) == EMPTY) {
                 return NORTH;
             }
-            return NORTHEAST;
+            // else go west
+            return WEST;
         }
         
+        // if none of the condition is satisfied, just followed the ball
         else {
-            // if none of the condition is satisfied, just followed the ball
             return ballDir;
         }
+        
     } // end Defensive
-
+    
+   
     // function to establish Lead behavior
     public int Lead () {
 
