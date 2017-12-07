@@ -14,6 +14,7 @@ public class LlamasWithHats extends Player {
     static final int LEAD = 1;
     static final int SUPPORT = 2;
     static final int REAR = 3;
+    static final int NORTHWING = 4;
 
 
     static int player_x[];       // keeps track of the x coord of each player
@@ -57,113 +58,121 @@ public class LlamasWithHats extends Player {
 
     // function for player1
     public int Player1() {
-
+        
         // initialize the initial action to WEST
         int action = WEST;
-
+        
         // call the behave function to find each player's role
         Behave();
-
+        
         // get position, distance to ball, have ball, and direction to ball for player 1
         player_x[0] = GetLocation().x;
         player_y[0] = GetLocation().y;
         dist_to_ball[0] = GetBallDistance();
         have_ball[0] = HaveBall(0);
         direct_to_ball[0] = GetBallDirection();
-
+        
         // checks for the role of player 1
         switch (roles[0]) {
             case LEAD: action = Lead();
                 break;
             case SUPPORT: action = Defensive();
                 break;
+            case NORTHWING: action = NorthWing();
+                break;
             case REAR: action = Rear();
                 break;
         }
         
         return action;
-    
+        
     } // end Player1()
-
+    
     // function for player2
     public int Player2() {
-
+        
         // initialize the initial action to WEST
         int action = WEST;
-
+        
         // get position, distance to ball, have ball, and direction to ball for player 1
         player_x[1] = GetLocation().x;
         player_y[1] = GetLocation().y;
         dist_to_ball[1] = GetBallDistance();
         have_ball[1] = HaveBall(1);
         direct_to_ball[1] = GetBallDirection();
-
+        
         // checks for the role of player 2
         switch (roles[1]) {
             case LEAD: action =  Lead();
                 break;
             case SUPPORT: action =  Defensive();
                 break;
+            case NORTHWING: action = NorthWing();
+                break;
             case REAR: action = Rear();
                 break;
         }
         
         return action;
-    
+        
     } // end Player2()
-
+    
     // function for player3
     public int Player3() {
-
+        
         // initialize the initial action to WEST
         int action = WEST;
-
+        
         // get position, distance to ball, have ball, and direction to ball for player 1
         player_x[2] = GetLocation().x;
         player_y[2] = GetLocation().y;
         dist_to_ball[2] = GetBallDistance();
         have_ball[2] = HaveBall(2);
         direct_to_ball[2] = GetBallDirection();
-
+        
         // checks for the role of player 3
         switch (roles[2]) {
             case LEAD: action =  Lead();
                 break;
             case SUPPORT: action =  Defensive();
                 break;
+            case NORTHWING: action = NorthWing();
+                break;
             case REAR: action = Rear();
                 break;
         }
         
         return action;
-
+        
     } // end Player3()
-
+    
     // function for player4
     public int Player4() {
         
         // initialize the initial action to WEST
         int action = WEST;
-
+        
         // get position, distance to ball, have ball, and direction to ball for player 1
         player_x[3] = GetLocation().x;
         player_y[3] = GetLocation().y;
         dist_to_ball[3] = GetBallDistance();
         have_ball[3] = HaveBall(3);
         direct_to_ball[3] = GetBallDirection();
-
+        
         // checks for the role of player 4
         switch (roles[3]) {
             case LEAD: action =  Lead();
                 break;
             case SUPPORT: action =  Defensive();
                 break;
+            case NORTHWING: action = NorthWing();
+                break;
             case REAR: action = Rear();
                 break;
         }
         
         return action;
-
+        
     } // end Player4()
 
     public void WonPoint () {};
@@ -217,7 +226,7 @@ public class LlamasWithHats extends Player {
         for(int i = 0; i < 4; i++){
             roles[i] = 0;
         }
-
+        
         // set the new leader to player with index newLead
         if(have_ball[newLead] == 1){
             roles[newLead] = LEAD;
@@ -225,27 +234,39 @@ public class LlamasWithHats extends Player {
         else {
             roles[newLead] = SUPPORT;
         }
-
-        int maxIndex = 0;
-        int rear2Index = 0;
+        
+        int rear = 0;
+        int north = 0;
+        int bottomY = 10000;
+        
         for(int i = 0; i < 4; i++){
-            rear2Index = i;
-            if(dist_to_ball[rear2Index] > dist_to_ball[maxIndex]){
-                rear2Index = maxIndex;
-                maxIndex = i;
+            if(dist_to_ball[i] > dist_to_ball[rear]){
+                rear = i;
             }
-
+            // if role unassigned, players are automatically supporters
+            if(roles[i] == 0){
+                roles[i] = SUPPORT;
+                bottomY = player_y[i];
+                north = i;
+            }
+        }
+        
+        
+        
+        for(int i = 0; i < 4; i++){
             // if role unassigned, players are automatically supporters
             if(roles[i] == 0){
                 roles[i] = SUPPORT;
             }
         }
-
+        
         // furthest away from ball becomes rear
-        roles[maxIndex] = REAR;
-
-
+        roles[rear] = REAR;
+        roles[north] = NORTHWING;
+        
+        
     } // end Regroup
+ 
 
     /////////////////////////////////////////////////////////////////////////
 
@@ -293,13 +314,13 @@ public class LlamasWithHats extends Player {
                 int opponentDirection = GetOpponentDirection(i);
                 
                 // if the opponent is in the north or northwest direction
-                if (opponentDirection == NORTH || opponentDirection == NORTHWEST){
+                if (opponentDirection == NORTH || opponentDirection == NORTHWEST) {
                     // increment the number of opponents above player
                     numOpponentsAbove++;
                 }
                 
                 // if the opponent is in the south or southwest directoion
-                else if (opponentDirection == SOUTH || opponentDirection == SOUTHWEST){
+                else if (opponentDirection == SOUTH || opponentDirection == SOUTHWEST) {
                     // decrement the number of opponents below player
                     numOpponentsAbove--;
                 }
@@ -325,6 +346,19 @@ public class LlamasWithHats extends Player {
         }
 
     } // end Rear
+    
+    public int NorthWing(){
+        /*int player_y = GetLocation().y;
+        if (player_y > 15 * FieldY() / 16){
+            if (Look(NORTH) == EMPTY) {
+                return NORTH;
+            }
+            else if (Look(NORTHEAST) == EMPTY) {
+                return NORTHEAST;
+            }
+        }*/
+        return Defensive();
+    }
 
     // function to establish Defensive behavior
     public int Defensive(){
@@ -339,15 +373,15 @@ public class LlamasWithHats extends Player {
         int player_x = GetLocation().x;
         
         // if the player is near the goal, and the ball is in the NW, W, SW direction
-        if(player_x < 9 && (ballDir == NORTHWEST || ballDir == WEST || ballDir == SOUTHWEST)
+        if (player_x < 9 && (ballDir == NORTHWEST || ballDir == WEST || ballDir == SOUTHWEST)
         && ballDist == 1) {
             return KICK;
         }
 
         // if the ball is in the north direction, if northeast is empty, go to northeast, then north
         // if northeast is not empty, just go north
-        else if(ballDir == NORTH){
-            if(Look(NORTHEAST) == EMPTY){
+        else if (ballDir == NORTH){
+            if (Look(NORTHEAST) == EMPTY){
                 return NORTHEAST;
             }
             return NORTH;
@@ -355,8 +389,8 @@ public class LlamasWithHats extends Player {
 
         // if the ball is in the northeast direction, if northeast is empty, go to northeast, then north
         // if northeast is not empty, just go north
-        else if(ballDir == NORTHEAST){
-            if(Look(NORTHEAST) == EMPTY){
+        else if (ballDir == NORTHEAST){
+            if (Look(NORTHEAST) == EMPTY){
                 return NORTHEAST;
             }
             return NORTH;
@@ -430,9 +464,10 @@ public class LlamasWithHats extends Player {
     // function to establish Lead behavior
     public int Lead () {
 
+        // get the ball's direction
         int ballDir = GetBallDirection();
         
-        // get the y_coordiate of the player
+        // get the y_coordinate of the player
         int player_y = GetLocation().y;
 
         // if there is a ball in the south direction
@@ -452,11 +487,11 @@ public class LlamasWithHats extends Player {
             // if there is an opponent in the southwest and west direction, but
             // no supporter in the southeast direction
             else if (Look(NORTHWEST) == OPPONENT || Look(WEST) == OPPONENT &&
-                     Look(NORTHEAST) == TEAMMATE) {
+                     Look(NORTHEAST) != TEAMMATE) {
                 if (player_y > 4) {
                     return KICK;
                 } else {
-                    return NORTHEAST;
+                    return NORTH;
                 }
             }
             
@@ -501,11 +536,11 @@ public class LlamasWithHats extends Player {
         else if(Look(EAST) == BALL){
             
             // if there is nothing in the southeast adjacent cell, then go southeast
-            if(Look(SOUTHEAST) == EMPTY){
+            if(Look(SOUTHEAST) == EMPTY) {
                 return SOUTHEAST;
             }
             // if there is nothing in the northeast adjacent cell, then go northeast
-            else if(Look(NORTHEAST) == EMPTY){
+            else if(Look(NORTHEAST) == EMPTY) {
                 return NORTHEAST;
             }
             // if there is nothing in the north adjacent cell, then go north
@@ -523,25 +558,25 @@ public class LlamasWithHats extends Player {
         }
 
         // if there is a ball in the southeast direction
-        else if(Look(SOUTHEAST) == BALL){
+        else if(Look(SOUTHEAST) == BALL) {
             
             // if there is nothing in the east adjacent cell, then go east
-            if(Look(EAST) == EMPTY){
+            if(Look(EAST) == EMPTY) {
                 return EAST;
             }
             
             // if there is nothing in the south adjacent cell, then go south
-            else if(Look(SOUTH) == EMPTY){
+            else if(Look(SOUTH) == EMPTY) {
                 return SOUTH;
             }
             
             // if there is nothing in the northeast adjacent cell, then go northeast
             // otherwise go southwest (CHANGED)
             else {
-                if(Look(NORTH) == EMPTY){
-                    return NORTH;
+                if(Look(SOUTHWEST) == EMPTY) {
+                    return SOUTHWEST;
                 }
-                return SOUTHWEST;
+                return NORTH;
             }
         }
 
@@ -557,16 +592,17 @@ public class LlamasWithHats extends Player {
                 } else {
                     return EAST;
                 }
+            
             }
             
             // if there is an opponent in the southwest and west direction, but
             // no supporter in the southeast direction
             else if (Look(SOUTHWEST) == OPPONENT || Look(WEST) == OPPONENT &&
-                     Look(SOUTHEAST) == TEAMMATE) {
+                     Look(SOUTHEAST) != TEAMMATE) {
                 if (player_y < 30) {
                     return KICK;
                 } else {
-                    return SOUTHEAST;
+                    return SOUTH;
                 }
             }
             
@@ -591,7 +627,7 @@ public class LlamasWithHats extends Player {
         }
 
         // if there is a ball in the southwest direction, kick
-        else if (Look(SOUTHWEST) == BALL){
+        else if (Look(SOUTHWEST) == BALL) {
             return KICK;
         }
         
