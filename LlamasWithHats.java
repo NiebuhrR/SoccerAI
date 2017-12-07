@@ -193,8 +193,8 @@ public class LlamasWithHats extends Player {
         for(int i = 0; i < 4 ; i++){
             // if distance from the player to ball is 1
             if(dist_to_ball[i] == 1) {
-                // prioritize players who are adjacent to the ball and in the NE or SE directions as leader
-                if(direct_to_ball[i] == NORTHEAST || direct_to_ball[i] == SOUTHEAST){
+                // prioritize players who are adjacent to the ball and in the NW or SW directions as leader
+                if(direct_to_ball[i] == NORTHWEST || direct_to_ball[i] == SOUTHWEST){
                     newLead = i;
                     break;
                 }
@@ -259,19 +259,25 @@ public class LlamasWithHats extends Player {
 
         // if y coordinate of player is less that 5
         // move south
-        if(player_y < 5){
+        if (player_y < 5){
             return SOUTH;
         }
         
         // if y coordinate of player is more than 75
         // move north
-        else if(player_y > 75){
-            return NORTH;
+        else if (player_y > 70){
+            if (Look(NORTH) == EMPTY) {
+                return NORTH;
+            }
+            else if (Look(NORTHEAST) == EMPTY) {
+                return NORTHEAST;
+            }
+            return PLAYER;
         }
         
         // if the distance to ball is more than 8
         // act like a defensive player
-        else if(GetBallDistance() > 8) {
+        else if (GetBallDistance() > 8) {
             return Defensive();
         }
         
@@ -281,19 +287,19 @@ public class LlamasWithHats extends Player {
             // initialize the number of opponents above the player to 0
             int numOpponentsAbove = 0;
             
-            for(int i = 0; i < 4; i++){
+            for (int i = 0; i < 4; i++){
                 
                 // get the opponent direction
                 int opponentDirection = GetOpponentDirection(i);
                 
                 // if the opponent is in the north or northwest direction
-                if(opponentDirection == NORTH || opponentDirection == NORTHWEST){
+                if (opponentDirection == NORTH || opponentDirection == NORTHWEST){
                     // increment the number of opponents above player
                     numOpponentsAbove++;
                 }
                 
                 // if the opponent is in the south or southwest directoion
-                else if(opponentDirection == SOUTH || opponentDirection == SOUTHWEST){
+                else if (opponentDirection == SOUTH || opponentDirection == SOUTHWEST){
                     // decrement the number of opponents below player
                     numOpponentsAbove--;
                 }
@@ -305,12 +311,12 @@ public class LlamasWithHats extends Player {
             }
             
             // if there are more opponents below than above, go north
-            else if(numOpponentsAbove < -1){
+            else if (numOpponentsAbove < -1){
                 return NORTH;
             }
             
             // if there is an equal number of players above and below
-            else if(numOpponentsAbove == 0) {
+            else if (numOpponentsAbove == 0) {
                 return Defensive();
             }
             
@@ -318,23 +324,29 @@ public class LlamasWithHats extends Player {
             return ballDir;
         }
 
-    }
-
+    } // end Rear
 
     // function to establish Defensive behavior
     public int Defensive(){
         
         // get the direction to ball
         int ballDir = GetBallDirection();
-
+        
+        // get the distance to ball
+        int ballDist = GetBallDistance();
+        
+        // get the x_coordinate of the player
         int player_x = GetLocation().x;
-        if(player_x < 9 && (ballDir == NORTHWEST || ballDir == WEST || ballDir == SOUTHWEST)){
+        
+        // if the player is near the goal, and the ball is in the NW, W, SW direction
+        if(player_x < 9 && (ballDir == NORTHWEST || ballDir == WEST || ballDir == SOUTHWEST)
+        && ballDist == 1) {
             return KICK;
         }
 
         // if the ball is in the north direction, if northeast is empty, go to northeast, then north
         // if northeast is not empty, just go north
-        if(ballDir == NORTH){
+        else if(ballDir == NORTH){
             if(Look(NORTHEAST) == EMPTY){
                 return NORTHEAST;
             }
@@ -377,23 +389,23 @@ public class LlamasWithHats extends Player {
             return EAST;
         }
 
-        // if the ball is in the southwest direction, if southeast is empty, go southeast, then south
+        // if the ball is in the southeast direction, if southeast is empty, go southeast, then south
         // if southeast is not empty, then just go south --> the point is to get behind the ball
         else if (ballDir == SOUTHWEST) {
-            if (Look(SOUTHEAST) == EMPTY) {
-                return SOUTHEAST;
+            if (Look(SOUTH) == EMPTY) {
+                return SOUTH;
             }
-            return SOUTH;
+            return SOUTHEAST;
         }
 
         // if the ball is in the west direction, and if there is a teammate in the west direction,
         // then go to northwest; if northwest is also blocked, then go to southwest; otherwise just go west
         else if (ballDir == WEST) {
-            if(Look(WEST) == TEAMMATE){
-                if(Look(NORTH) == EMPTY){
+            if(Look(WEST) == TEAMMATE) {
+                if(Look(NORTH) == EMPTY) {
                     return NORTH;
                 }
-                else if(Look(SOUTH) == EMPTY){
+                else if(Look(SOUTH) == EMPTY) {
                     return SOUTH;
                 }
             }
@@ -403,10 +415,10 @@ public class LlamasWithHats extends Player {
         // if the ball is in the northwest direction, and if northeast is empty, go to northeast, then north
         // if northeast is not empty, just go north
         else if (ballDir == NORTHWEST) {
-            if (Look(NORTHEAST) == EMPTY) {
+            if (Look(NORTH) == EMPTY) {
                 return NORTH;
             }
-            return NORTH;
+            return NORTHEAST;
         }
         
         else {
@@ -523,11 +535,11 @@ public class LlamasWithHats extends Player {
                 return SOUTH;
             }
             
-            // if there is nothing in the northeast adjacent cell, then go north
-            // otherwise go southwest
+            // if there is nothing in the northeast adjacent cell, then go northeast
+            // otherwise go southwest (CHANGED)
             else {
-                if(Look(NORTHEAST) == EMPTY){
-                    return NORTHEAST;
+                if(Look(NORTH) == EMPTY){
+                    return NORTH;
                 }
                 return SOUTHWEST;
             }
@@ -551,7 +563,7 @@ public class LlamasWithHats extends Player {
             // no supporter in the southeast direction
             else if (Look(SOUTHWEST) == OPPONENT || Look(WEST) == OPPONENT &&
                      Look(SOUTHEAST) == TEAMMATE) {
-                if (player_y < 29) {
+                if (player_y < 30) {
                     return KICK;
                 } else {
                     return SOUTHEAST;
@@ -579,17 +591,17 @@ public class LlamasWithHats extends Player {
         }
 
         // if there is a ball in the southwest direction, kick
-        else if(Look(SOUTHWEST) == BALL){
+        else if (Look(SOUTHWEST) == BALL){
             return KICK;
         }
         
         // if there is a ball in the west direction, kick
-        else if(Look(WEST) == BALL){
+        else if (Look(WEST) == BALL){
             return  KICK;
         }
         
         // if there is a ball in the southwest direction, kick
-        else if(Look(NORTHWEST) == BALL){
+        else if (Look(NORTHWEST) == BALL){
             return KICK;
         }
         
@@ -616,176 +628,4 @@ public class LlamasWithHats extends Player {
     } // end getAction
 
 }
-
-
-/*
-Leader
-
-CASE 1: Leader doesn’t have ball
-    * want to move towards ball
-    * return GetBallDirection()
-
-CASE 2: Leader has ball
-
-    a) an opponent is blocking us from kicking the ball (in any direction)
-
-        if(opponentDir == ballDir && opponentDist[i] == 2) {
-            * want to be a blocker, so opponent can't kick from their
-            * want other team member to rescue us: let support move toward ball
-            * leader stays the same, closest support acts like the leader
-        }
-
-    b) if none of the opponents are blocking us from kicking the ball
-    
-        i. if at least one opponent is really close to us but we're not block:
-            (meaning opponent can easily steal ball)
-            * idk what to do?
-            * maybe, just kick the ball using ballDir?
-
-        ii. if(GetOpponentDistance(1) > 3){ //checks for closet opponent
-            * check where we have the most opponents (N or S)
-
-                if(numOppAbove >= 2) { //at least 2 above
-                    * want to kick to southward (S or SW)
-                    if (ballDir == S or SW ){ Kick } //if leader is N or NE of ball, getBallDir == S or SW
-
-                    if (ballDir == W){ // if leader is East of ball
-                        * want to move N so I can kick SW
-                        * tell support that leader is passing SW so they can go towards that area
-                    }
-
-                }
-                if(numOppAbove <= -2) { //at least 2 below
-                    * want to kick to southward (N or NW)
-                    if (ballDir from Leader == N or NW ){ Kick } //if leader is S or SE of ball, getBallDir == N or NW
-                    if (ballDir from Leader == W){
-                        * want to move S so I can kick NW
-                        * tell support that leader is passing NW so they can go towards that area
-                    }
-                }
-        }
-
-
-SUPPORT
-
-Case 1: team has ball
-    * if(dist_to_ball == 1) { act like a leader with ball; }
-    * if leader is about to pass, start moving to where the pass will be (would need a new "passing_N/S" state)
-
-Case 2: team doesn't have bal;
-    * want to move towards ball
-    * return GetBallDirection()
-
-ADDITION TO CODE:
-- behave keeps track if leader has ball because IDK how to check that in the Lead() function since we
-    don't know which player is the leader
-
-*/
-
-/* QUYEN'S NOTE: HOW TO FOLLOW BALL
-
-My algorithm for how to follow the ball efficiently for supporters. These are designed to block the ball from 
-opponents or cutting off as they are trying to get the ball
- 
- // if the ball is in the north direction, if northeast is empty, go to northeast, then north
- // if northeast is not empty, just go north
- if direct_to_ball == NORTH {
- if Look(NORTHEAST) == EMPTY {
- return NORTHEAST;
- }
- return NORTH;
- }
- 
- // if the ball is in the northeast direction, if northeast is empty, go to northeast, then north
- // if northeast is not empty, just go north
- else if direct_to_ball == NORTHEAST {
- if Look(NORTHEAST) == EMPTY {
- return NORTHEAST;
- }
- return NORTH;
- }
- 
- // if the ball is in the east direction, if east is empty, go to east, then northeast
- // if east is not empty, just go northeast
- else if direct_to_ball == EAST {
- if Look(EAST) == EMPTY {
- return EAST;
- }
- return NORTHEAST;
- }
- 
- // if the ball is in the southeast direction, if southeast is empty, go southeast, then south
- // if southeast is not empty, just go south
- else if direct_to_ball == SOUTHEAST {
- if Look(SOUTHEAST) == EMPTY {
- return SOUTHEAST;
- }
- return SOUTH;
- }
- 
- // if the ball is in the south direction, if southeast is empty, go southeast, then east
- // if southeast is not empty, just go east  --> this is a little wonky, but i want the new
- // condition becomes southwest...
- else if direct_to_ball == SOUTH {
- if Look(SOUTHEAST) == EMPTY {
- return SOUTHEAST;
- }
- return EAST;
- }
- 
- // if the ball is in the southwest direction, if southeast is empty, go southeast, then south
- // if southeast is not empty, then just go south --> the point is to get behind the ball
- else if direct_to_ball == SOUTHWEST {
- if Look(SOUTHEAST) == EMPTY {
- return SOUTHEAST;
- }
- return SOUTH;
- }
- 
- // if the ball is in the west direction, just go west
- else if direct_to_ball == WEST {
- return WEST;
- }
- 
- // if the ball is in the northwest direction, go northeast, then north
- // if northeast is not empty, then just go north
- else if direct_to_ball == NORTHWEST {
- if Look(NORTHEAST) {
- return NORTHEAST;
- }
- return NORTH;
- }
- 
- // if none of the case above, just go towards the ball in the ball's direction
- else {
- return direct_to_ball;
- }
- */
-
-/* MORE NOTES FROM QUYEN: Strategy for leader when it has a ball
- 
- if Look(NORTH) == BALL {
-    // case 1: if there is immediate danger; i.e. if opponent is in the west or southwest directions
-    if Look(WEST) == OPPONENT or Look(NORTHWEST) == OPPONENT {
-        // if the player is low enough on the board, just kick the ball upwards (north)
-        if playerY > Y_THRESHOLD {
-            return KICK;
-        }
-        // if the player is not low enough on the board, nudge the ball upwards (north)
-        else {
-            return NORTH;
-        }
-    }
-    // case 2: if opponents are not adjacent to the ball but pretty are pretty near
-    // nudge the ball upwards (north)
-    else if dist_to_opponent < OPPONENT_THRESHOLD {
-        return NORTH;
-    }
-    // if none of the case above, go northeast to get behind the ball
-    else {
-        return NORTHEAST;
-    }
- }
-*/
-
 
